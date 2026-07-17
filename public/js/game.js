@@ -135,17 +135,6 @@ function setupSlidersAndInputs() {
     // เมื่อลากสไลเดอร์
     slider.addEventListener('input', () => {
       let val = parseInt(slider.value) || 0;
-      
-      // คำนวณเงินรวมของสินทรัพย์อื่นที่ไม่ใช่ตัวนี้
-      const otherSum = getOtherAssetsSum(key);
-      const remaining = myState.money - otherSum;
-
-      // ป้องกันการลากเกินงบที่มี
-      if (val > remaining) {
-        val = remaining;
-        slider.value = val;
-      }
-
       input.value = val.toLocaleString();
       updatePercentagesAndSummary();
     });
@@ -160,13 +149,11 @@ function setupSlidersAndInputs() {
     input.addEventListener('blur', () => {
       let val = Math.max(0, parseInt(input.value) || 0);
 
-      // คำนวณเงินรวมของสินทรัพย์อื่น
-      const otherSum = getOtherAssetsSum(key);
-      const remaining = myState.money - otherSum;
-
-      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินที่เหลืออยู่
-      if (val > remaining) {
-        val = remaining;
+      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินจำกัดของตัวเอง
+      if (key === 'insurance') {
+        val = Math.min(20000, val);
+      } else {
+        val = Math.min(myState.money, val);
       }
 
       slider.value = val;
@@ -195,13 +182,11 @@ function setupSlidersAndInputs() {
       // แปลงเปอร์เซ็นต์เป็นยอดเงินบาทจริง
       let val = Math.round((pctVal / 100) * myState.money);
 
-      // คำนวณเงินรวมของสินทรัพย์อื่น
-      const otherSum = getOtherAssetsSum(key);
-      const remaining = myState.money - otherSum;
-
-      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินที่เหลืออยู่
-      if (val > remaining) {
-        val = remaining;
+      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินจำกัดของตัวเอง
+      if (key === 'insurance') {
+        val = Math.min(20000, val);
+      } else {
+        val = Math.min(myState.money, val);
       }
 
       slider.value = val;
@@ -253,15 +238,26 @@ function updatePercentagesAndSummary() {
 
   const remaining = myState.money - totalAllocated;
 
-  // คุมยอดลงทุนไม่ให้เกินสุทธิ: อัปเดตเพดานสูงสุดของสไลเดอร์แต่ละชิ้นแบบเรียลไทม์ตามเงินกองกลางที่เหลือ
+  // ปรับเพดานสไลเดอร์แต่ละชิ้นให้เป็นค่าคงที่ เพื่อให้เลื่อนได้เป็นอิสระต่อกัน (ไม่ล็อกสไลเดอร์ตัวอื่น)
   ASSETS.forEach(key => {
     const slider = document.getElementById(`slide-${key}`);
-    const val = parseInt(slider.value) || 0;
-    slider.max = Math.max(0, val + remaining);
+    if (key === 'insurance') {
+      slider.max = 20000;
+    } else {
+      slider.max = myState.money;
+    }
   });
   
   // อัปเดตกล่องแสดงเงินกองกลางขนาดใหญ่ด้านบนสุดของการลงทุน
-  document.getElementById('cash-pool-display-val').innerText = `${remaining.toLocaleString()} ฿`;
+  const cashPoolValEl = document.getElementById('cash-pool-display-val');
+  cashPoolValEl.innerText = `${remaining.toLocaleString()} ฿`;
+  if (remaining < 0) {
+    cashPoolValEl.style.color = 'var(--neon-red)';
+    cashPoolValEl.style.textShadow = '0 0 10px var(--neon-red)';
+  } else {
+    cashPoolValEl.style.color = 'var(--neon-green)';
+    cashPoolValEl.style.textShadow = '0 0 10px var(--neon-green)';
+  }
   
   // อัปเดตข้อมูลส่วนสรุปการจัดสรรเงินด้านล่าง
   document.getElementById('summary-allocated-val').innerText = `${totalAllocated.toLocaleString()} ฿`;
@@ -270,12 +266,19 @@ function updatePercentagesAndSummary() {
   const remainingValEl = document.getElementById('summary-remaining-val');
   remainingValEl.innerText = `${remaining.toLocaleString()} ฿`;
 
-  // ตรวจสอบความถูกต้อง
+  // ตรวจสอบความถูกต้องและแจ้งเตือนปุ่มส่งแผนเมื่อเงินติดลบ
   const cashWrap = document.getElementById('summary-cash-wrap');
+  const submitBtn = document.getElementById('btn-submit-alloc');
   if (remaining < 0) {
     cashWrap.classList.add('error');
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+    submitBtn.innerText = 'เงินเกินจำนวนที่มี! (OVER BUDGET)';
   } else {
     cashWrap.classList.remove('error');
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '1';
+    submitBtn.innerText = 'ส่งแผนการลงทุน (SUBMIT)';
   }
 }
 
@@ -694,11 +697,18 @@ function loadAllocationToSliders(alloc) {
     const slider = document.getElementById(`slide-${key}`);
     const input = document.getElementById(`input-${key}`);
 
-    // ตั้งค่าเพดานสไลเดอร์สูงสุดของสินทรัพย์แต่ละชิ้นให้เท่ากับยอดเงินทั้งหมดที่มีอยู่จริง
-    slider.max = myState.money;
+    // ตั้งค่าเพดานสไลเดอร์สูงสุดของสินทรัพย์แต่ละชิ้น
+    if (key === 'insurance') {
+      slider.max = 20000;
+    } else {
+      slider.max = myState.money;
+    }
     
     // ตั้งค่ายอดจัดสรรในสินทรัพย์แต่ละชิ้น
-    const val = alloc[key] || 0;
+    let val = alloc[key] || 0;
+    if (key === 'insurance') {
+      val = Math.min(20000, val);
+    }
     slider.value = val;
     input.value = val.toLocaleString();
   });
@@ -972,6 +982,11 @@ function renderFinancialReport() {
       grade = 'B';
       gradeColor = 'var(--neon-yellow)';
       remark = 'คุณมีความพยายามซื้อประกัน แต่วงเงินชดเชยไม่คุ้มค่าความคุ้มครอง (ซื้อบางส่วนต่ำกว่า 20,000 ฿) ทำให้ยังคงต้องจ่ายส่วนต่างบิลค่ารักษาพยาบาลจากส่วนเงินสด';
+    } else {
+      // เคสที่ไม่ซื้อประกันและไม่เจ็บป่วยเลยตลอดเกม (โชคช่วย)
+      grade = 'B';
+      gradeColor = 'var(--neon-yellow)';
+      remark = 'คุณโชคดีมากที่ตลอดเกมไม่เจอกล่องสุ่มเจอโรคระบาดร้ายแรงเลยรอดตัวไปได้ แต่ในชีวิตจริงควรโอนย้ายความเสี่ยงด้วยประกันสุขภาพไว้เพื่อความอุ่นใจและไม่ประมาทครับ';
     }
 
     // กำหนดสีพื้นหลังและสีเส้นขอบของกรอบตามเกรดแผนสุขภาพ
@@ -1034,7 +1049,7 @@ function renderFinancialReport() {
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px;">
         <span style="font-weight: bold; font-size: 1rem; color: #fff;">${replaceAvatarInText(p.name)} ${p.id === socket.id ? '<span style="color:var(--neon-yellow); font-size: 0.75rem;">(คุณ)</span>' : ''}</span>
         <div style="text-align: right;">
-          <div class="retro-font" style="font-size: 0.55rem; color: #8f85bd;">เกรดแผนสุขภาพ</div>
+          <div class="retro-font" style="font-size: 0.55rem; color: #8f85bd;">การป้องกันความเสี่ยง</div>
           <div class="retro-font" style="font-size: 1.5rem; color: ${gradeColor}; font-weight: bold; text-shadow: 0 0 5px ${gradeColor};">${grade}</div>
         </div>
       </div>
