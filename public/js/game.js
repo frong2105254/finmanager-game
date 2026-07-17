@@ -1059,11 +1059,11 @@ function renderFinancialReport() {
         </table>
       </div>
 
-      <div style="border: 2px dashed ${boxBorderColor}; padding: 10px; background-color: ${boxBgColor}; font-size: 0.75rem; border-radius: 4px; line-height: 1.45;">
+      <div style="border: 2px dashed ${boxBorderColor}; padding: 10px; background-color: ${boxBgColor}; font-size: 0.75rem; border-radius: 4px; line-height: 1.45; word-break: keep-all;">
         <span style="font-weight: bold; color: ${gradeColor};">📢 ความเห็นนักวางแผนสุขภาพ:</span>
         <span style="color: #eee;">
           ${remark}
-          ${stats.totalOutofPocket > 0 ? `<br><span style="color:${gradeColor}; font-weight:bold;">* วิเคราะห์ความสูญเสีย:</span> คุณจ่ายเงินค่ารักษาสูงถึง <b style="color: var(--neon-red);">${stats.totalOutofPocket.toLocaleString()} ฿</b> (คิดเป็น <b style="color: var(--neon-red);">${leakagePct}%</b> ของทุนตั้งตัว) หากโอนย้ายความเสี่ยงนี้ไปด้วยประกันสุขภาพแต่แรก เงินจำนวนนี้ได้รับการป้องกัน 100% และคงเหลือไปต่อยอดปันผลสร้างพอร์ตคุณให้เติบโตได้ยิ่งใหญ่กว่านี้อย่างมั่นคง!` : `<br><span style="color:${gradeColor}; font-weight:bold;">* วิเคราะห์จุดแข็ง:</span> ยอดเยี่ยมมาก! การคุ้มครองสุขภาพช่วยให้กระแสเงินสดกองกลางของคุณปลอดภัย ไม่ต้องเทขายสินทรัพย์ตัวอื่นแบบเฉลียดพลันเพื่อล้างหนี้รักษาสุขภาพ พอร์ตจึงเติบโตอย่างมั่นคงต่อเนื่อง!`}
+          ${stats.totalOutofPocket > 0 ? `<br><span style="color:${gradeColor}; font-weight:bold;">* วิเคราะห์ความสูญเสีย:</span> คุณจ่ายเงินค่ารักษาสูงถึง <b style="color: var(--neon-red);">${stats.totalOutofPocket.toLocaleString()} ฿</b> (คิดเป็น <b style="color: var(--neon-red);">${leakagePct}%</b> ของทุนตั้งตัว) หากโอนย้ายความเสี่ยงนี้ไปด้วยประกันสุขภาพแต่แรก เงินจำนวนนี้ได้รับการป้องกัน 100% และคงเหลือไป<span style="white-space: nowrap;">ต่อยอด</span>ปันผลสร้างพอร์ตคุณให้เติบโตได้ยิ่งใหญ่กว่านี้อย่างมั่นคง!` : `<br><span style="color:${gradeColor}; font-weight:bold;">* วิเคราะห์จุดแข็ง:</span> ยอดเยี่ยมมาก! การคุ้มครองสุขภาพช่วยให้กระแสเงินสดกองกลางของคุณปลอดภัย ไม่ต้องเทขายสินทรัพย์ตัวอื่นแบบเฉลียดพลันเพื่อล้างหนี้รักษาสุขภาพ พอร์ตจึงเติบโตอย่างมั่นคงต่อเนื่อง!`}
         </span>
       </div>
     `;
