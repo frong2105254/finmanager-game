@@ -943,7 +943,8 @@ function renderFinancialReport() {
     let personality = 'นักลงทุนสายสมดุล (Balanced Planner)';
     let personalityDesc = 'คุณมีการจัดสรรเงินที่สมดุลดีเยี่ยม ระหว่างสินทรัพย์ปลอดภัยและสินทรัพย์เติบโตเพื่อกระจายความเสี่ยง';
     
-    let safePct = (avgPct.bank || 0) + (avgPct.govBonds || 0);
+    // หากไม่ลงทุนปล่อยเงินคาไว้ในกองกลาง (cash) ให้ถือว่ามีความปลอดภัยสูงเหมือนเงินฝากธนาคาร
+    let safePct = (avgPct.bank || 0) + (avgPct.govBonds || 0) + (avgPct.cash || 0);
     let riskyPct = (avgPct.stocks || 0) + (avgPct.realEstate || 0);
     let specPct = (avgPct.bitcoin || 0) + (avgPct.artToys || 0);
 
