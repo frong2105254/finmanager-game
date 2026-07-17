@@ -5,7 +5,7 @@
 // หากนำหน้าบ้านขึ้น Cloudflare Pages แล้ว ให้นำ URL ของ Backend เซิร์ฟเวอร์ที่ได้ (เช่น จาก Render/Railway) มาแก้ไขแทนลิงก์ด้านล่างนี้
 const BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? '' 
-  : 'https://your-finmanager-backend.onrender.com'; // 📌 ใส่ URL Backend จริงของคุณที่นี่ภายหลัง
+  : 'https://finmanager-backend.onrender.com'; // 📌 ใส่ URL Backend จริงของคุณที่นี่ภายหลัง
 
 const socket = io(BACKEND_URL);
 
