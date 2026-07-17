@@ -9,6 +9,21 @@ const BACKEND_URL = (window.location.hostname === 'localhost' || window.location
 
 const socket = io(BACKEND_URL);
 
+// ฟังก์ชันล็อก/ปลดล็อกการเลื่อนของ Body สำหรับช่วยแก้ปัญหาสกรอลล์บนมือถือ (iOS)
+function setBodyScroll(scrollable) {
+  if (scrollable) {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.height = '';
+  } else {
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+  }
+}
+
 // สถานะของผู้เล่นคนปัจจุบัน
 let myState = {
   id: '',
@@ -300,18 +315,21 @@ function bindButtons() {
   document.getElementById('btn-open-guide').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('guide-overlay').classList.add('show');
+    setBodyScroll(false);
   });
 
   // ปุ่มปิดคู่มือการลงทุน
   document.getElementById('btn-close-guide').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('guide-overlay').classList.remove('show');
+    setBodyScroll(true);
   });
 
   // ปุ่มปิดคู่มือแบบ X
   document.getElementById('btn-close-guide-x').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('guide-overlay').classList.remove('show');
+    setBodyScroll(true);
   });
 
   // ปุ่มเปิดรายงานสรุปการวางแผนการเงิน
@@ -319,18 +337,25 @@ function bindButtons() {
     window.audio.playClick();
     renderFinancialReport();
     document.getElementById('financial-report-overlay').classList.add('show');
+    setBodyScroll(false);
   });
 
   // ปุ่มปิดรายงานสรุปการวางแผนการเงิน
   document.getElementById('btn-close-financial-report').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('financial-report-overlay').classList.remove('show');
+    if (!document.getElementById('winner-overlay').classList.contains('show')) {
+      setBodyScroll(true);
+    }
   });
 
   // ปุ่มปิดรายงานสรุปการวางแผนการเงินแบบ X
   document.getElementById('btn-close-financial-report-x').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('financial-report-overlay').classList.remove('show');
+    if (!document.getElementById('winner-overlay').classList.contains('show')) {
+      setBodyScroll(true);
+    }
   });
 
   // ปุ่มเริ่มเกม (เฉพาะโฮสต์)
@@ -387,6 +412,7 @@ function bindButtons() {
   document.getElementById('btn-close-cutscene').addEventListener('click', () => {
     window.audio.playClick();
     document.getElementById('cutscene-overlay').classList.remove('show');
+    setBodyScroll(true);
   });
 }
 
@@ -623,6 +649,7 @@ function setupSocketListeners() {
     
     // ซ่อนหน้าต่างประกาศผลรางวัล
     document.getElementById('winner-overlay').classList.remove('show');
+    setBodyScroll(true);
     
     // กลับหน้า Lobby
     showScreen('screen-lobby');
@@ -853,6 +880,7 @@ function triggerCutscene(event, myPlayerData) {
 
   // โชว์ป๊อปอัพ
   document.getElementById('cutscene-overlay').classList.add('show');
+  setBodyScroll(false);
 }
 
 // ฟังก์ชันคำนวณและประมวลผลรายงานสรุปแผนการเงินสุขภาพของผู้เล่นแต่ละคน
@@ -1059,7 +1087,7 @@ function renderFinancialReport() {
         </table>
       </div>
 
-      <div style="border: 2px dashed ${boxBorderColor}; padding: 10px; background-color: ${boxBgColor}; font-size: 0.75rem; border-radius: 4px; line-height: 1.45; word-break: keep-all;">
+      <div style="border: 2px dashed ${boxBorderColor}; padding: 10px; background-color: ${boxBgColor}; font-size: 0.75rem; border-radius: 4px; line-height: 1.45; word-break: break-word;">
         <span style="font-weight: bold; color: ${gradeColor};">📢 ความเห็นนักวางแผนสุขภาพ:</span>
         <span style="color: #eee;">
           ${remark}
@@ -1132,6 +1160,7 @@ function showWinnerCeremony(roomState) {
 
   // โชว์หน้านี้ขึ้นมาทับจอเกมทั้งหมด
   document.getElementById('winner-overlay').classList.add('show');
+  setBodyScroll(false);
   
   // เรียกเอฟเฟกต์กระดาษสีฉลองชัยโปรยลงมา
   startConfetti();
