@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit FinManager - เกมบริหารเงินสุดปั่น</title>
+  <!-- CSS สไตล์เรโทร -->
+  <link rel="stylesheet" href="css/retro.css">
+  <!-- นำเข้า Socket.IO Client -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="crt-screen">
+    
+    <!-- ==================== หน้าจอที่ 1: เข้าสู่ระบบ / หน้าหลัก (Auth Screen) ==================== -->
+    <div id="screen-auth" class="auth-container pixel-border-neon" style="margin-top: 5vh;">
+      <h1 class="retro-title">FIN MANAGER</h1>
+      <p class="retro-font" style="font-size: 0.65rem; color: var(--neon-magenta); margin-bottom: 25px;">
+        8-BIT MULTIPLAYER FINANCIAL GAME
+      </p>
+
+      <!-- ฟอร์มกรอกชื่อผู้เล่น -->
+      <div class="input-group">
+        <label class="input-label" for="player-name">ชื่อผู้เล่น (ภาษาไทย/อังกฤษ)</label>
+        <input type="text" id="player-name" class="pixel-input" placeholder="กรอกชื่อสุดเท่..." maxlength="15">
+      </div>
+
+      <!-- เลือกอวาตาร์ตัวละคร -->
+      <div class="input-group">
+        <label class="input-label" style="text-align: center; display: block;">เลือกตัวละครนำโชค</label>
+        <div class="avatar-selector" id="avatar-selector">
+          <div class="avatar-option selected" data-avatar="🐱" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🐱</div>
+          <div class="avatar-option" data-avatar="🤖" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🤖</div>
+          <div class="avatar-option" data-avatar="👾" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">
+            <svg viewBox="0 0 8 8" style="width: 28px; height: 28px; fill: #007aff; shape-rendering: crispEdges;">
+              <rect x="2" y="0" width="1" height="1" /><rect x="5" y="0" width="1" height="1" />
+              <rect x="3" y="1" width="2" height="1" />
+              <rect x="1" y="2" width="6" height="1" />
+              <rect x="0" y="3" width="2" height="1" /><rect x="3" y="3" width="2" height="1" /><rect x="6" y="3" width="2" height="1" />
+              <rect x="0" y="4" width="8" height="1" />
+              <rect x="2" y="5" width="4" height="1" />
+              <rect x="1" y="6" width="1" height="1" /><rect x="6" y="6" width="1" height="1" />
+              <rect x="0" y="7" width="1" height="1" /><rect x="7" y="7" width="1" height="1" />
+            </svg>
+          </div>
+          <div class="avatar-option" data-avatar="👻" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">👻</div>
+          <div class="avatar-option" data-avatar="🐷" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🐷</div>
+          <div class="avatar-option" data-avatar="🐸" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🐸</div>
+          <div class="avatar-option" data-avatar="🐼" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🐼</div>
+          <div class="avatar-option" data-avatar="🦄" style="font-size: 24px; display: flex; justify-content: center; align-items: center;">🦄</div>
+        </div>
+      </div>
+
+      <hr style="border: 1px dashed var(--border-color); margin: 20px 0;">
+
+      <!-- ส่วนสร้างห้องเกม (Host) -->
+      <div class="input-group">
+        <label class="input-label">ระดับความยาก (จำนวนรอบการเล่น)</label>
+        <div class="difficulty-options">
+          <input type="radio" id="diff-easy" name="difficulty" value="easy" class="diff-radio" checked>
+          <label for="diff-easy" class="diff-label">EASY<br><span style="font-size:0.6rem;">10 รอบ</span></label>
+
+          <input type="radio" id="diff-medium" name="difficulty" value="medium" class="diff-radio">
+          <label for="diff-medium" class="diff-label">NORMAL<br><span style="font-size:0.6rem;">20 รอบ</span></label>
+
+          <input type="radio" id="diff-hard" name="difficulty" value="hard" class="diff-radio">
+          <label for="diff-hard" class="diff-label">HARD<br><span style="font-size:0.6rem;">30 รอบ</span></label>
+        </div>
+      </div>
+
+      <button id="btn-create" class="pixel-btn pixel-btn-green" style="width: 100%; margin-bottom: 20px;">
+        สร้างห้องใหม่ (HOST)
+      </button>
+
+      <div style="font-family: var(--font-retro); font-size: 0.6rem; color: #8f85bd; margin-bottom: 20px;">
+        - OR -
+      </div>
+
+      <!-- ส่วนเข้าร่วมห้อง (Join) -->
+      <div class="input-group">
+        <label class="input-label" for="room-code-input">กรอกรหัสห้อง (ROOM CODE 4 หลัก)</label>
+        <input type="text" id="room-code-input" class="pixel-input" placeholder="เช่น ABCD" maxlength="4" style="text-align: center; font-family: var(--font-retro); text-transform: uppercase;">
+      </div>
+
+      <button id="btn-join" class="pixel-btn pixel-btn-cyan" style="width: 100%;">
+        เข้าร่วมห้อง (JOIN)
+      </button>
+
+      <button id="btn-open-guide" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 15px;">
+        📖 คู่มือการลงทุน (GUIDE)
+      </button>
+    </div>
+
+    <!-- ==================== หน้าจอที่ 2: ล็อบบี้เตรียมความพร้อม (Lobby Screen) ==================== -->
+    <div id="screen-lobby" class="auth-container pixel-border-magenta" style="display: none; margin-top: 8vh;">
+      <h1 class="retro-font" style="font-size: 1.5rem; color: var(--neon-yellow);">LOBBY</h1>
+      <p class="retro-font" style="font-size: 0.6rem; color: #888; margin-top: 5px;">เตรียมตัวบริหารความรวย</p>
+
+      <div class="lobby-code-display">
+        <div style="font-size: 0.7rem; font-family: var(--font-retro); margin-bottom: 5px; color: #8f85bd;">ROOM CODE</div>
+        <span id="lobby-code-val" class="retro-font">----</span>
+      </div>
+
+      <div class="lobby-players-box">
+        <div class="lobby-players-title">ผู้เล่นที่เข้าร่วมแล้ว (<span id="lobby-count-val">0</span>/8)</div>
+        <ul class="lobby-player-list" id="lobby-player-list">
+          <!-- ผู้เล่นในล็อบบี้จะถูกใส่ด้วย JS -->
+        </ul>
+      </div>
+
+      <div class="input-group" style="text-align: center;">
+        <span class="input-label" style="display: inline-block;">ระดับความยาก:</span>
+        <span id="lobby-diff-val" style="color: var(--neon-yellow); font-family: var(--font-retro); font-size: 0.75rem;">EASY (10 รอบ)</span>
+      </div>
+
+      <div id="lobby-host-controls" style="display: none; margin-top: 20px;">
+        <button id="btn-start-game" class="pixel-btn pixel-btn-green" style="width: 100%;">
+          เริ่มเกมทันที! (START)
+        </button>
+      </div>
+      <div id="lobby-guest-waiting" style="margin-top: 20px; color: var(--neon-cyan); font-size: 0.9rem;" class="retro-font">
+        <span class="bounce-anim" style="display: inline-block; font-size: 0.65rem;">รอโฮสต์กดเริ่มเกม...</span>
+      </div>
+      
+      <!-- ปุ่มกลับหน้าแรกจากห้อง Lobby -->
+      <div style="margin-top: 15px;">
+        <button id="btn-lobby-back" class="pixel-btn pixel-btn-magenta" style="width: 100%;">
+          กลับหน้าแรก (LEAVE LOBBY)
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== หน้าจอที่ 3: หน้ากระดานเกมหลัก (Game Screen) ==================== -->
+    <div id="screen-game" style="display: none; flex-direction: column; flex-grow: 1;">
+      
+      <!-- ส่วนหัวของเกม -->
+      <header class="game-header">
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <h2 class="game-title retro-font">FIN MANAGER</h2>
+          <span class="room-badge retro-font" id="game-room-code">ROOM: ----</span>
+        </div>
+        <div class="round-info retro-font" id="game-round-info">
+          รอบการเล่น: 0 / 10
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <span id="my-name-display" style="font-weight: bold; color: var(--neon-cyan);">ผู้เล่น: -</span>
+          <span id="my-avatar-display" style="font-size: 1.5rem;">🐱</span>
+        </div>
+      </header>
+
+      <!-- พื้นที่เลย์เอาต์บอร์ดเกม -->
+      <div class="game-layout">
+        
+        <!-- ฝั่งบอร์ดหลัก (MAIN BOARD) -->
+        <main class="main-board">
+          
+          <!-- การ์ดสถานะเงินทุนและผู้เล่น -->
+          <div class="stats-cards">
+            <div class="stat-card pixel-border-neon">
+              <div class="stat-title retro-font">ยอดเงินทุนสุทธิของคุณ</div>
+              <div class="stat-value money" id="my-wealth-val">1,000,000 ฿</div>
+            </div>
+            <div class="stat-card pixel-border-magenta">
+              <div class="stat-title retro-font">สถานะของคุณ</div>
+              <div class="stat-value status" id="my-status-val">กำลังวางแผน...</div>
+            </div>
+          </div>
+
+          <!-- ฟอร์มการจัดสรรเงินทุน (Allocation Board) -->
+          <div class="allocation-board pixel-border">
+            <h3 class="retro-font" style="font-size: 0.9rem; color: var(--neon-yellow); margin-bottom: 5px;">
+              ปรับสัดส่วนการลงทุนประจำรอบ
+            </h3>
+            <p style="font-size: 0.85rem; color: #8f85bd; margin-bottom: 15px;">
+              เลื่อนสไลเดอร์หรือกรอกตัวเลขเพื่อดึงเงินลงทุนจากกองกลางไปยังสินทรัพย์ต่างๆ (เงินที่ไม่ได้จัดสรรจะค้างอยู่ในกองกลาง)
+            </p>
+
+            <!-- กล่องแสดงเงินกองกลางขนาดใหญ่สะดุดตา -->
+            <div class="cash-pool-display-box pixel-border">
+              <div class="cash-pool-title">เงินกองกลางที่จัดสรรได้ (CASH POOL)</div>
+              <div class="cash-pool-value" id="cash-pool-display-val">1,000,000 ฿</div>
+            </div>
+
+            <form id="alloc-form">
+              <div class="alloc-grid" id="alloc-grid">
+                
+                <!-- 1. เงินฝากธนาคาร (Bank) -->
+                <div class="asset-card" data-risk="very-low">
+                  <div class="asset-info">
+                    <span class="asset-name">🏦 เงินฝากธนาคาร</span>
+                    <span class="asset-badge">เสี่ยงต่ำมาก</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">ดอกเบี้ยคงที่และมั่นคงสูงสุด แต่อาจแพ้เงินเฟ้อ</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-bank" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-bank" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-bank" value="0">
+                  </div>
+                </div>
+
+                <!-- 2. ประกันสุขภาพ (Insurance) -->
+                <div class="asset-card" data-risk="special">
+                  <div class="asset-info">
+                    <span class="asset-name">🏥 ประกันสุขภาพ</span>
+                    <span class="asset-badge">เบี้ยเสียทิ้ง</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">คุ้มครองค่ารักษาโรคระบาด (แนะนำลงทุน 20,000 เพื่อครอบคลุม)</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-insurance" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-insurance" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-insurance" value="0">
+                  </div>
+                </div>
+
+                <!-- 3. พันธบัตรรัฐบาล (Gov Bonds) -->
+                <div class="asset-card" data-risk="very-low">
+                  <div class="asset-info">
+                    <span class="asset-name">📜 พันธบัตรรัฐบาล</span>
+                    <span class="asset-badge">มั่นคงสูง</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">มั่นคงสูงมาก ได้ดอกเบี้ยสม่ำเสมอชัวร์ทุกรอบ</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-govBonds" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-govBonds" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-govBonds" value="0">
+                  </div>
+                </div>
+
+                <!-- 4. หุ้นกู้เอกชน (Corporate Bonds) -->
+                <div class="asset-card" data-risk="low">
+                  <div class="asset-info">
+                    <span class="asset-name">🏢 หุ้นกู้เอกชน</span>
+                    <span class="asset-badge">เสี่ยงต่ำ</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">ดอกเบี้ยดีกว่ารัฐบาลเล็กน้อย เสี่ยงถ้าบริษัทขาดทุน</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-corpBonds" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-corpBonds" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-corpBonds" value="0">
+                  </div>
+                </div>
+
+                <!-- 5. ทองคำ (Gold) -->
+                <div class="asset-card" data-risk="medium">
+                  <div class="asset-info">
+                    <span class="asset-name">🪙 ทองคำ</span>
+                    <span class="asset-badge">เสี่ยงปานกลาง</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">สินทรัพย์ปลอดภัย มักราคาพุ่งเมื่อตลาดหุ้นและคริปโตพัง</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-gold" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-gold" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-gold" value="0">
+                  </div>
+                </div>
+
+                <!-- 6. อสังหาให้เช่า (Real Estate) -->
+                <div class="asset-card" data-risk="medium">
+                  <div class="asset-info">
+                    <span class="asset-name">🏠 อสังหาฯให้เช่า</span>
+                    <span class="asset-badge">เสี่ยงปานกลาง</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">ได้เงินค่าเช่าสม่ำเสมอทุกรอบ แต่อาจพังทลายจากภัยพิบัติ</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-realEstate" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-realEstate" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-realEstate" value="0">
+                  </div>
+                </div>
+
+                <!-- 7. หุ้นสามัญ (Stocks) -->
+                <div class="asset-card" data-risk="high">
+                  <div class="asset-info">
+                    <span class="asset-name">📈 หุ้นสามัญ</span>
+                    <span class="asset-badge">เสี่ยงสูง</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">กำไรเติบโตสูงตามรอบเศรษฐกิจ มีความผันผวนสูง</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-stocks" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-stocks" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-stocks" value="0">
+                  </div>
+                </div>
+
+                <!-- 8. บิตคอยน์ (Bitcoin) -->
+                <div class="asset-card" data-risk="extreme">
+                  <div class="asset-info">
+                    <span class="asset-name">₿ บิตคอยน์</span>
+                    <span class="asset-badge">เสี่ยงสุดขีด</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">เทคโนโลยีการเงินเปลี่ยนโลก รวยเละหรือล้มละลายชั่วข้ามคืน</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-bitcoin" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-bitcoin" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-bitcoin" value="0">
+                  </div>
+                </div>
+
+                <!-- 9. กล่องสุ่มอาร์ตทอยส์ดอยสะท้านฟ้า (Art Toys) -->
+                <div class="asset-card" data-risk="meme-speculative" style="border-color: #ff007f; box-shadow: 0 0 8px rgba(255, 0, 127, 0.2);">
+                  <div class="asset-info">
+                    <span class="asset-name">🧸 กล่องสุ่มอาร์ตทอยส์</span>
+                    <span class="asset-badge" style="background-color: #ff007f; color: white;">เสี่ยงสุดปั่น</span>
+                  </div>
+                  <div style="font-size:0.75rem; color: #888;">ของสะสมสุดฮิป! ลุ้นกระแสไวรัลทำกำไร 500% หรือเสื่อมค่ายับ 95%</div>
+                  <div class="slider-container">
+                    <input type="range" class="pixel-range asset-slider" id="slide-artToys" min="0" max="1000000" step="1" value="0">
+                    <div class="asset-percentage-wrap">
+                      <input type="text" class="asset-percentage-input" id="pct-input-artToys" value="0">
+                      <span class="asset-percentage-symbol">%</span>
+                    </div>
+                  </div>
+                  <div class="asset-input-wrap">
+                    <span>฿</span>
+                    <input type="text" class="asset-input-val" id="input-artToys" value="0">
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- ผลรวมและปุ่มส่งข้อมูล -->
+              <div class="alloc-summary">
+                <div class="remaining-cash" id="summary-cash-wrap">
+                  เงินทุนที่จัดสรรแล้ว: <span id="summary-allocated-val">0 ฿</span> / <span id="summary-total-val">1,000,000 ฿</span>
+                  <div style="font-size:0.8rem; color:#8f85bd; margin-top:2px;">
+                    เงินคงเหลือที่ค้างอยู่ในกองกลาง: <span id="summary-remaining-val" style="color:var(--neon-green)">1,000,000 ฿</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button type="button" id="btn-reset-alloc" class="pixel-btn pixel-btn-magenta">
+                    ดึงเงินกลับกองกลางทั้งหมด (RESET)
+                  </button>
+                  <button type="button" id="btn-submit-alloc" class="pixel-btn pixel-btn-green">
+                    ส่งแผนการลงทุน (SUBMIT)
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </main>
+
+        <!-- ฝั่งแถบข้าง (SIDEBAR): ตารางคะแนนผู้เล่นและประวัติรอบ -->
+        <aside class="sidebar">
+          
+          <!-- รายการผู้เล่นในห้อง -->
+          <div class="players-list pixel-border">
+            <h3 class="list-title">ผู้เล่นทั้งหมด</h3>
+            <div id="game-players-wrap">
+              <!-- ข้อมูลผู้เล่นจะถูกเรนเดอร์ในนี้ -->
+            </div>
+          </div>
+
+          <!-- ประวัติการสุ่มเหตุการณ์ -->
+          <div class="history-log pixel-border">
+            <h3 class="list-title">ประวัติเหตุการณ์</h3>
+            <div id="game-history-wrap">
+              <div style="color: #666085; text-align: center; padding-top: 20px; font-size: 0.85rem;">ยังไม่มีบันทึกเหตุการณ์</div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- ==================== ส่วนทับซ้อน 1: ภาพ Cutscene สุ่มเหตุการณ์ (Event Overlay) ==================== -->
+    <div id="cutscene-overlay" class="cutscene-overlay">
+      <div class="cutscene-box pixel-border-neon">
+        <h2 class="retro-font" style="font-size: 0.8rem; color: var(--neon-cyan); margin-bottom: 10px;">
+          --- ROUND EVENT ---
+        </h2>
+        
+        <!-- รูปภาพพิกเซลคัทซีนของแต่ละธีมเหตุการณ์ -->
+        <div class="cutscene-image-container">
+          <img src="" id="cutscene-img" class="cutscene-image" alt="Event Cutscene" onerror="this.style.display='none'; document.getElementById('cutscene-placeholder-box').style.display='flex';">
+          <div id="cutscene-placeholder-box" class="cutscene-placeholder">
+            <div class="icon" id="cutscene-icon">🌍</div>
+            <div class="retro-font" style="font-size: 0.65rem;" id="cutscene-theme-name">THEME</div>
+          </div>
+        </div>
+
+        <h3 class="cutscene-title retro-font" id="cutscene-title-val">ชื่อเหตุการณ์</h3>
+        <p class="cutscene-desc" id="cutscene-desc-val">รายละเอียดแบบย่อสุดฮาและตลก...</p>
+        
+        <div class="cutscene-effects">
+          <div class="cutscene-effect-title">ผลกระทบต่อสินทรัพย์:</div>
+          <ul class="cutscene-effect-list" id="cutscene-effects-list">
+            <!-- ดึงรายการมาใส่ผ่าน JS -->
+          </ul>
+        </div>
+
+        <button id="btn-close-cutscene" class="pixel-btn pixel-btn-cyan" style="width: 100%;">
+          รับทราบแผน (CLOSE)
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ส่วนทับซ้อน 2: หน้าจอประกาศผลผู้ชนะ (Winner Screen) ==================== -->
+    <div id="winner-overlay" class="winner-overlay">
+      <!-- คอนเฟตติโปรยปรายเมื่อได้รับชัยชนะ -->
+      <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999;"></canvas>
+
+      <div class="winner-box pixel-border-neon" style="position: relative; z-index: 1000;">
+        <div class="trophy-container" id="winner-trophy">🏆</div>
+        <h1 class="retro-font" style="font-size: 1.8rem; color: var(--neon-yellow);">วิคตอรี่!</h1>
+        <p class="retro-font" style="font-size: 0.65rem; color: #8f85bd; margin-bottom: 20px;">จบรอบสุดท้ายเรียบร้อย</p>
+
+        <!-- รูปภาพเฉลองชัยชนะแบบ 8-bit -->
+        <div class="cutscene-image-container" style="height: 200px; max-width: 400px; margin: 0 auto 20px;">
+          <img src="assets/winner_scene.png" id="winner-img" class="cutscene-image" alt="Winner Celebrate" onerror="this.style.display='none'; document.getElementById('winner-placeholder').style.display='flex';">
+          <div id="winner-placeholder" class="cutscene-placeholder">
+            <div class="icon">👑</div>
+            <div class="retro-font" style="font-size: 0.6rem;">GAME OVER</div>
+          </div>
+        </div>
+        
+        <div style="font-size: 0.90rem; color: #fff;" class="retro-font">สุดยอดนักลงทุนมือฉมังคนต่อไปของโลกใบนี้ คือ !!!!</div>
+        <div class="winner-name" id="winner-name-val">---</div>
+        <div class="winner-wealth-val" id="winner-wealth-val-label">฿0</div>
+
+        <div class="leaderboard">
+          <h3 class="leaderboard-title">กระดานจัดอันดับผู้เล่น</h3>
+          <div id="leaderboard-list">
+            <!-- รายชื่อจัดอันดับใส่ด้วย JS -->
+          </div>
+        </div>
+
+        <!-- ปุ่มสำหรับ Host สั่งท้าดวลเล่นต่อ -->
+        <button id="btn-play-again" class="pixel-btn pixel-btn-green" style="width: 100%; margin-top: 15px; display: none;">
+          ท้าดวลเล่นใหม่อีกรอบ! (PLAY AGAIN)
+        </button>
+        
+        <!-- ข้อความสำหรับ Guest รอเล่นรอบใหม่ -->
+        <div id="guest-wait-restart" style="margin-top: 15px; margin-bottom: 5px; color: var(--neon-cyan); display: none; font-size: 0.75rem;" class="retro-font">
+          รอโฮสต์กดเล่นอีกรอบ...
+        </div>
+
+        <button id="btn-show-financial-report" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 15px;">
+          📊 สรุปรายงานการวางแผนการเงิน (FINANCIAL REPORT)
+        </button>
+
+        <button id="btn-leave-game" class="pixel-btn pixel-btn-magenta" style="width: 100%; margin-top: 15px;">
+          ออกจากห้องกลับหน้าหลัก (LEAVE ROOM)
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ส่วนทับซ้อน 4: หน้าต่างคู่มือการลงทุน (Investment Guide Modal) ==================== -->
+    <div id="guide-overlay" class="cutscene-overlay">
+      <div class="pixel-border-yellow cutscene-box" style="max-width: 550px; width: 95%; max-height: 85vh; overflow-y: auto; padding: 25px; background-color: #0c0827; position: relative;">
+        <div style="position: absolute; top: 10px; right: 15px; cursor: pointer; color: var(--neon-magenta); font-family: var(--font-retro); font-size: 1.2rem; font-weight: bold;" id="btn-close-guide-x">X</div>
+        
+        <h2 class="retro-font" style="font-size: 1.2rem; color: var(--neon-yellow); text-align: center; margin-top: 5px; margin-bottom: 5px;">คู่มือการลงทุน</h2>
+        <p style="font-size: 0.75rem; color: #8f85bd; text-align: center; margin-bottom: 15px;" class="retro-font">INVESTMENT GUIDE</p>
+        
+        <div style="font-size: 0.85rem; line-height: 1.5; color: #f0edf9;">
+          
+          <!-- ตารางสรุปสินทรัพย์ -->
+          <div style="overflow-x: auto; margin-bottom: 20px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); color: var(--neon-cyan);">
+                  <th style="padding: 6px; font-weight: bold;">สินทรัพย์</th>
+                  <th style="padding: 6px; text-align: center; font-weight: bold;">ปันผลต่อรอบ</th>
+                  <th style="padding: 6px; font-weight: bold;">ความเสี่ยงยามเกิดวิกฤต / สรุปพฤติกรรม</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">🏦 เงินฝาก</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+0.5%</td>
+                  <td style="padding: 6px; color: #aaa;">ไม่มีความเสี่ยงสูญเงินต้น ปลอดภัยที่สุด แต่อาจสู้เงินเฟ้อได้ยาก</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">📜 พันธบัตรรัฐ</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+1.5%</td>
+                  <td style="padding: 6px; color: #aaa;">ความมั่นคงสูงมาก ได้รับผลตอบแทนสม่ำเสมอในรอบวิกฤตและโรคระบาด</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">🏢 หุ้นกู้เอกชน</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+2.0%</td>
+                  <td style="padding: 6px; color: #aaa;">ผลตอบแทนดีกว่ารัฐบาลเล็กน้อย เสี่ยงปานกลางหากเกิดวิกฤตหุ้นตก</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">🪙 ทองคำ</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+1.0%</td>
+                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ, ภัยพิบัติธรรมชาติ, และเงินเฟ้อ (+10% ถึง +25%)</b></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">🏠 อสังหาฯ</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+4.0%</td>
+                  <td style="padding: 6px; color: var(--neon-red);">ได้รับค่าเช่าสม่ำเสมอ แต่อาจขาดทุนหนักหากเกิด <b>ภัยพิบัติ (น้ำท่วม/ไฟไหม้) หรือตลาดหมี (-10% ถึง -15%)</b></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">📈 หุ้นสามัญ</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+3.0%</td>
+                  <td style="padding: 6px; color: var(--neon-red);">เติบโตดีตามรอบเศรษฐกิจ แต่ราคาจะตกหนักเมื่อเกิด <b>โรคระบาด วิกฤตเศรษฐกิจ หรือเงินเฟ้อ (-15% ถึง -20%)</b></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">₿ บิตคอยน์</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+5.0%</td>
+                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +150%)</b> แต่อาจร่วงยับยามเกิดวิกฤต</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #221d45;">
+                  <td style="padding: 6px; font-weight: bold;">🧸 อาร์ตทอยส์</td>
+                  <td style="padding: 6px; text-align: center; color: #8f85bd;">สุ่มตามกระแส</td>
+                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +200% ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ราคาจะร่วงเกือบเป็น 0 (-95%) ยามวิกฤต/โรคระบาด</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ข้อมูลประกันสุขภาพ -->
+          <div style="border: 2px dashed var(--neon-green); padding: 12px; border-radius: 4px; background-color: #0b2210; margin-bottom: 20px; text-align: left;">
+            <h4 class="retro-font" style="font-size: 0.7rem; color: var(--neon-green); margin-bottom: 8px;">🏥 คู่มือประกันสุขภาพ (Health Insurance)</h4>
+            <ul style="padding-left: 15px; font-size: 0.75rem; margin: 0; color: #ddd; display: flex; flex-direction: column; gap: 5px;">
+              <li>เบี้ยประกันเป็น <b>เบี้ยเสียทิ้งรายรอบ</b> (ไม่ได้สะสมเป็นเงินเก็บ และหมดอายุทุกรอบที่จบลง)</li>
+              <li><b>ประกันคุ้มครองเต็มรูปแบบ (จ่ายเบี้ย 20,000 ฿ ขึ้นไป)</b>: 
+                <ul style="padding-left: 15px; margin-top: 3px; color: #fff;">
+                  <li>ครอบคลุมจ่ายค่ารักษาพยาบาลจากโรคระบาดให้เต็มจำนวน 100% ไม่จำกัดวงเงินสูงสุด (แม้เป็นโหมด Hard ราคา 300,000 - 570,000 ฿ ก็คุ้มครอง)</li>
+                  <li>ได้รับเงินทำขวัญพิเศษคืนให้คุณทันที <b>+50,000 ฿</b> เข้าสู่พอร์ต</li>
+                </ul>
+              </li>
+              <li><b>ประกันคุ้มครองบางส่วน (จ่ายต่ำกว่า 20,000 ฿)</b>: ช่วยจ่ายค่ารักษาพยาบาลตามสัดส่วน <b>เบี้ยประกัน x 10 เท่า</b> (ส่วนต่างค่ารักษาคุณต้องควักจ่ายเอง)</li>
+            </ul>
+          </div>
+          
+        </div>
+
+        <button id="btn-close-guide" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 10px;">
+          เข้าใจแล้ว (CLOSE)
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ส่วนทับซ้อน 5: หน้าต่างสรุปรายงานการวางแผนการเงิน (Financial Report Modal) ==================== -->
+    <div id="financial-report-overlay" class="cutscene-overlay" style="z-index: 10500;">
+      <div class="pixel-border-yellow cutscene-box" style="max-width: 600px; width: 95%; max-height: 85vh; overflow-y: auto; padding: 25px; background-color: #0c0827; position: relative;">
+        <div style="position: absolute; top: 10px; right: 15px; cursor: pointer; color: var(--neon-magenta); font-family: var(--font-retro); font-size: 1.2rem; font-weight: bold;" id="btn-close-financial-report-x">X</div>
+        
+        <h2 class="retro-font" style="font-size: 1.1rem; color: var(--neon-yellow); text-align: center; margin-top: 5px; margin-bottom: 5px;">รายงานการวางแผนการเงิน</h2>
+        <p style="font-size: 0.7rem; color: #8f85bd; text-align: center; margin-bottom: 20px;" class="retro-font">FINANCIAL PLANNING REPORT</p>
+        
+        <div id="financial-report-cards-container" style="font-size: 0.85rem; line-height: 1.5; color: #f0edf9; display: flex; flex-direction: column; gap: 20px;">
+          <!-- รายงานผลของแต่ละคนจะถูกแทรกผ่าน JS -->
+        </div>
+
+        <button id="btn-close-financial-report" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 20px;">
+          ปิดรายงาน (CLOSE)
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ส่วนทับซ้อน 3: ตัวอักษรแสดงผลเริ่มเกม (Start Game Overlay) ==================== -->
+    <div id="start-overlay" class="start-overlay" style="display: none;">
+      <div class="start-text retro-font">START!</div>
+    </div>
+
+  </div>
+
+  <!-- นำเข้าสคริปต์ Frontend -->
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

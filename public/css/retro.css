@@ -1,0 +1,976 @@
+/* public/css/retro.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Kanit:wght@300;400;600;800&display=swap');
+
+:root {
+  --bg-color: #0d0a21;
+  --bg-panel: #171239;
+  --border-color: #3f317b;
+  --text-color: #f0edf9;
+  --neon-cyan: #00f3ff;
+  --neon-magenta: #ff007f;
+  --neon-yellow: #ffea00;
+  --neon-green: #39ff14;
+  --neon-red: #ff2a2a;
+  --neon-orange: #ff9d00;
+  --font-retro: 'Press Start 2P', monospace;
+  --font-thai: 'Kanit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-thai);
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* เอฟเฟกต์ CRT Scanlines และแสงระยิบระยับของจอเกมตู้ (ปิดไว้ตามคำขอผู้ใช้เพื่อให้อ่านง่ายขึ้น)
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 99999;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+*/
+
+/* เอฟเฟกต์จอกระพริบและขอบจอมืด (Vignette) */
+.crt-screen {
+  min-height: 100vh;
+  position: relative;
+  animation: crt-flicker 0.15s infinite;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.4) 100%);
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.995; }
+  50% { opacity: 1; }
+  100% { opacity: 0.995; }
+}
+
+/* กรอบพิกเซลอาร์ตย้อนยุค (Retro Pixel Border) */
+.pixel-border {
+  border: 4px solid #fff;
+  border-image: stretch;
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000, 
+    inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-panel);
+}
+
+.pixel-border-neon {
+  border: 4px solid var(--neon-cyan);
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000,
+    0 0 10px var(--neon-cyan);
+  background-color: var(--bg-panel);
+}
+
+.pixel-border-magenta {
+  border: 4px solid var(--neon-magenta);
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000,
+    0 0 10px var(--neon-magenta);
+  background-color: var(--bg-panel);
+}
+
+.pixel-border-yellow {
+  border: 4px solid var(--neon-yellow);
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000,
+    0 0 10px var(--neon-yellow);
+  background-color: var(--bg-panel);
+}
+
+/* ฟอนต์สไตล์เรโทร */
+.retro-font {
+  font-family: var(--font-retro);
+  text-shadow: 2px 2px #000;
+  letter-spacing: 1px;
+}
+
+.retro-title {
+  font-family: var(--font-retro);
+  font-size: 2.2rem;
+  color: var(--neon-yellow);
+  text-align: center;
+  margin-bottom: 20px;
+  animation: glow-text 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow-text {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-magenta);
+  }
+  to {
+    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-magenta);
+  }
+}
+
+/* ปุ่มกดสไตล์ 8-bit */
+.pixel-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-family: var(--font-retro);
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #fff;
+  background-color: #5856d6;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000;
+  transition: transform 0.1s, background-color 0.1s;
+}
+
+.pixel-btn:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 -2px 0 -1px #000, 
+    0 2px 0 -1px #000, 
+    -2px 0 0 -1px #000, 
+    2px 0 0 -1px #000;
+}
+
+.pixel-btn-cyan { background-color: #007aff; }
+.pixel-btn-cyan:hover { background-color: var(--neon-cyan); color: #000; }
+.pixel-btn-magenta { background-color: #d1006a; }
+.pixel-btn-magenta:hover { background-color: var(--neon-magenta); }
+.pixel-btn-yellow { background-color: #ffd200; color: #000; font-weight: bold; }
+.pixel-btn-yellow:hover { 
+  background-color: var(--neon-yellow); 
+  color: #000; 
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000,
+    0 0 15px var(--neon-yellow);
+}
+.pixel-btn-green { background-color: #2cb50d; }
+.pixel-btn-green:hover { background-color: var(--neon-green); color: #000; }
+
+.pixel-btn:disabled {
+  background-color: #4a4a4a !important;
+  color: #888 !important;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 
+    0 -4px 0 -2px #000, 
+    0 4px 0 -2px #000, 
+    -4px 0 0 -2px #000, 
+    4px 0 0 -2px #000 !important;
+}
+
+/* คอนเทนเนอร์หลักของหน้าสร้าง/เข้าร่วมห้อง */
+.auth-container {
+  max-width: 500px;
+  width: 90%;
+  margin: auto;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-retro);
+  font-size: 0.75rem;
+  color: var(--neon-cyan);
+}
+
+.pixel-input {
+  width: 100%;
+  padding: 12px;
+  background-color: #09061a;
+  border: 3px solid var(--border-color);
+  color: #fff;
+  font-family: var(--font-thai);
+  font-size: 1rem;
+  outline: none;
+}
+
+.pixel-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.pixel-select {
+  width: 100%;
+  padding: 12px;
+  background-color: #09061a;
+  border: 3px solid var(--border-color);
+  color: #fff;
+  font-family: var(--font-thai);
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.pixel-select:focus {
+  border-color: var(--neon-cyan);
+}
+
+/* สไตล์สไลด์เดอร์สัญชาติ 8-bit */
+.difficulty-options {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.diff-radio {
+  display: none;
+}
+
+.diff-label {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border: 3px solid var(--border-color);
+  background-color: #09061a;
+  cursor: pointer;
+  font-family: var(--font-retro);
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+
+.diff-radio:checked + .diff-label {
+  border-color: var(--neon-cyan);
+  background-color: #1b204e;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 3px var(--neon-cyan);
+}
+
+/* การแบ่งเลย์เอาต์หน้าจอเล่นเกม (game.html) */
+.game-header {
+  padding: 15px 30px;
+  border-bottom: 4px solid var(--border-color);
+  background-color: #0c0827;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.game-title {
+  font-size: 1.2rem;
+  color: var(--neon-yellow);
+}
+
+.room-badge {
+  background-color: var(--neon-magenta);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.round-info {
+  font-size: 0.9rem;
+  color: var(--neon-cyan);
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
+@media (max-width: 992px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main-board {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* คาร์ดยอดเงินคงเหลือ */
+.stats-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px;
+  position: relative;
+}
+
+.stat-title {
+  font-size: 0.7rem;
+  color: #8f85bd;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+.stat-value.money {
+  color: var(--neon-green);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.stat-value.status {
+  color: var(--neon-cyan);
+}
+
+.stat-value.bankrupt {
+  color: var(--neon-red);
+}
+
+/* บอร์ดปรับสัดส่วนการเงิน (Investment Sliders) */
+.allocation-board {
+  padding: 20px;
+}
+
+.alloc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.asset-card {
+  padding: 12px;
+  background-color: #100b2c;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.asset-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.asset-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.asset-badge {
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  color: #000;
+  font-weight: bold;
+}
+
+/* สีเฉพาะของแต่ละ Asset เพื่อจำแนกความเสี่ยง */
+.asset-card[data-risk="very-low"] { border-color: #248a0a; }
+.asset-card[data-risk="very-low"] .asset-badge { background-color: var(--neon-green); }
+.asset-card[data-risk="low"] { border-color: #007aff; }
+.asset-card[data-risk="low"] .asset-badge { background-color: var(--neon-cyan); }
+.asset-card[data-risk="medium"] { border-color: var(--neon-orange); }
+.asset-card[data-risk="medium"] .asset-badge { background-color: var(--neon-orange); }
+.asset-card[data-risk="high"] { border-color: var(--neon-magenta); }
+.asset-card[data-risk="high"] .asset-badge { background-color: var(--neon-magenta); }
+.asset-card[data-risk="extreme"] { border-color: #9c27b0; }
+.asset-card[data-risk="extreme"] .asset-badge { background-color: #e040fb; color: #fff; }
+.asset-card[data-risk="special"] { border-color: #e91e63; }
+.asset-card[data-risk="special"] .asset-badge { background-color: #ff4081; color: #fff; }
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* ตกแต่ง Input Range ให้เป็นเรโทรพิกเซล */
+.pixel-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #090619;
+  outline: none;
+  border: 1px solid var(--border-color);
+}
+
+.pixel-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--neon-cyan);
+  cursor: pointer;
+  box-shadow: -2px 0 #000, 2px 0 #000, 0 -2px #000, 0 2px #000;
+}
+
+.asset-input-wrap {
+  display: flex;
+  align-items: center;
+  background-color: #070415;
+  border: 1px solid var(--border-color);
+  padding: 2px 5px;
+  margin-top: 5px;
+}
+
+.asset-input-wrap span {
+  font-size: 0.8rem;
+  color: #666085;
+  margin-right: 5px;
+}
+
+.asset-input-val {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: var(--font-thai);
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: right;
+  outline: none;
+}
+
+.asset-percentage-wrap {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  min-width: 58px;
+}
+
+.asset-percentage-input {
+  width: 40px;
+  background-color: #070415;
+  border: 1px solid var(--border-color);
+  color: var(--neon-yellow);
+  font-family: var(--font-retro);
+  font-size: 0.8rem;
+  text-align: center;
+  outline: none;
+  padding: 1px;
+}
+
+.asset-percentage-symbol {
+  font-size: 0.75rem;
+  color: var(--neon-yellow);
+  margin-left: 2px;
+}
+
+/* ส่วนสรุปการลงทุน */
+.alloc-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.remaining-cash {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.remaining-cash span {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 3px var(--neon-cyan);
+}
+
+.remaining-cash.error span {
+  color: var(--neon-red);
+  text-shadow: 0 0 3px var(--neon-red);
+}
+
+/* ไซด์บาร์ตารางผู้เล่นและคะแนน */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.players-list {
+  padding: 15px;
+}
+
+.list-title {
+  font-size: 0.8rem;
+  color: var(--neon-yellow);
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 5px;
+}
+
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.player-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-avatar {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  background-color: var(--border-color);
+}
+
+.player-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: #555;
+}
+
+.player-status-dot.ready { background-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+.player-status-dot.submitted { background-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
+.player-status-dot.disconnected { background-color: #333; }
+.player-status-dot.bankrupt { background-color: var(--neon-red); box-shadow: 0 0 5px var(--neon-red); }
+
+.player-wealth {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.player-wealth.bankrupt {
+  color: var(--neon-red);
+  text-decoration: line-through;
+}
+
+/* ล็อกของประวัติการเล่น (Game Log) */
+.history-log {
+  padding: 15px;
+  flex-grow: 1;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.log-item {
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 5px;
+}
+
+.log-round {
+  color: var(--neon-cyan);
+  font-family: var(--font-retro);
+  font-size: 0.6rem;
+  margin-right: 5px;
+}
+
+.log-event-name {
+  color: var(--neon-yellow);
+  font-weight: bold;
+}
+
+/* ป๊อปอัพภาพประกอบ Cutscene Event แบบ Fullscreen */
+.cutscene-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.85);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.cutscene-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cutscene-box {
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  padding: 25px;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.cutscene-overlay.show .cutscene-box {
+  transform: scale(1);
+}
+
+.cutscene-image-container {
+  width: 100%;
+  height: 280px;
+  margin-bottom: 20px;
+  border: 4px solid var(--border-color);
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* เอฟเฟกต์รูปพิกเซลอาร์ต */
+.cutscene-image {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  object-fit: contain;
+}
+
+/* กรณีรูปภาพยังไม่โหลด หรือใช้ Placeholder สวยๆ สไตล์ 8-bit CSS */
+.cutscene-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #110d29;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--neon-yellow);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cutscene-placeholder .icon {
+  font-size: 4rem;
+  margin-bottom: 10px;
+  animation: bounce 0.6s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+.cutscene-title {
+  color: var(--neon-yellow);
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+}
+
+.cutscene-desc {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.cutscene-effects {
+  background-color: rgba(0,0,0,0.4);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: left;
+  border-left: 3px solid var(--neon-magenta);
+}
+
+.cutscene-effect-title {
+  font-size: 0.8rem;
+  color: var(--neon-magenta);
+  font-family: var(--font-retro);
+  margin-bottom: 5px;
+}
+
+.cutscene-effect-list {
+  font-size: 0.85rem;
+  list-style: none;
+}
+
+.cutscene-effect-list li {
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.effect-up { color: var(--neon-green); }
+.effect-down { color: var(--neon-red); }
+
+/* หน้าสรุปผลผู้ชนะเมื่อจบคงเกม (Winner Screen) */
+.winner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0c0827;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.winner-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.winner-box {
+  max-width: 700px;
+  width: 90%;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.trophy-container {
+  font-size: 6rem;
+  margin-bottom: 20px;
+  animation: scale-up 1s ease-out infinite alternate;
+}
+
+@keyframes scale-up {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.winner-name {
+  font-size: 2rem;
+  color: var(--neon-yellow);
+  margin: 15px 0;
+  text-shadow: 0 0 10px var(--neon-yellow);
+}
+
+.winner-wealth-val {
+  font-size: 1.5rem;
+  color: var(--neon-green);
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* ลีดเดอร์บอร์ดท้ายเกม */
+.leaderboard {
+  margin: 25px 0;
+  text-align: left;
+}
+
+.leaderboard-title {
+  font-family: var(--font-retro);
+  font-size: 0.9rem;
+  color: var(--neon-cyan);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px dashed var(--border-color);
+  font-size: 1rem;
+}
+
+.leaderboard-row.rank-1 {
+  background-color: rgba(255, 234, 0, 0.1);
+  border: 1px solid var(--neon-yellow);
+  color: var(--neon-yellow);
+}
+
+/* ป้ายล็อบบี้ */
+.lobby-code-display {
+  background: #090619;
+  border: 3px dashed var(--neon-magenta);
+  padding: 15px;
+  font-size: 1.5rem;
+  margin: 20px 0;
+  color: var(--neon-magenta);
+}
+
+.lobby-players-box {
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.lobby-players-title {
+  font-family: var(--font-retro);
+  font-size: 0.75rem;
+  margin-bottom: 10px;
+  color: var(--neon-cyan);
+}
+
+.lobby-player-list {
+  list-style: none;
+  min-height: 100px;
+  border: 2px solid var(--border-color);
+  padding: 10px;
+  background-color: #0b0722;
+}
+
+.lobby-player-card {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background: #15113d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+}
+
+.lobby-player-card.is-host::after {
+  content: "HOST";
+  font-family: var(--font-retro);
+  font-size: 0.55rem;
+  color: var(--neon-yellow);
+  border: 1px solid var(--neon-yellow);
+  padding: 2px 4px;
+}
+
+.avatar-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.avatar-option {
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  image-rendering: pixelated;
+  background-color: #131843;
+  border-radius: 4px;
+  transition: transform 0.1s;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
+.avatar-option.selected {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px var(--neon-cyan);
+  transform: scale(1.1);
+}
+
+
+/* กล่องแสดงเงินกองกลางขนาดใหญ่สะดุดตา */
+.cash-pool-display-box {
+  background: #090619;
+  border: 4px solid var(--neon-cyan);
+  padding: 15px;
+  margin-bottom: 25px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+.cash-pool-title {
+  font-family: var(--font-retro);
+  font-size: 0.85rem;
+  color: var(--neon-cyan);
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 3px var(--neon-cyan);
+}
+
+.cash-pool-value {
+  font-family: var(--font-retro);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-green);
+  animation: glow-cash 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow-cash {
+  from { text-shadow: 0 0 5px var(--neon-green); }
+  to { text-shadow: 0 0 15px var(--neon-green); }
+}
+
+/* เอฟเฟกต์การแสดงผลตัวอักษรเริ่มเล่นเกม (START Game) */
+.start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.start-text {
+  font-family: var(--font-retro);
+  font-size: 6rem;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 25px var(--neon-yellow);
+  animation: startZoom 1.4s ease-out forwards;
+}
+
+@keyframes startZoom {
+  0% { transform: scale(0.2); opacity: 0; }
+  35% { transform: scale(1.2); opacity: 1; }
+  75% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
