@@ -135,6 +135,22 @@ function setupSlidersAndInputs() {
     // เมื่อลากสไลเดอร์
     slider.addEventListener('input', () => {
       let val = parseInt(slider.value) || 0;
+      
+      // คำนวณเงินรวมของสินทรัพย์อื่นที่ไม่ใช่ตัวนี้
+      const otherSum = getOtherAssetsSum(key);
+      let maxAllowed = myState.money - otherSum;
+
+      // ตรวจสอบวงเงินแนะนำของตัวเลือกประกันสุขภาพ
+      if (key === 'insurance') {
+        maxAllowed = Math.min(20000, maxAllowed);
+      }
+
+      // ป้องกันการลากเกินงบที่มีอยู่จริง (สไลเดอร์จะหยุดไม่ให้เลื่อนจนติดลบ)
+      if (val > maxAllowed) {
+        val = maxAllowed;
+        slider.value = val;
+      }
+
       input.value = val.toLocaleString();
       updatePercentagesAndSummary();
     });
@@ -149,11 +165,16 @@ function setupSlidersAndInputs() {
     input.addEventListener('blur', () => {
       let val = Math.max(0, parseInt(input.value) || 0);
 
-      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินจำกัดของตัวเอง
+      // คำนวณเงินรวมของสินทรัพย์อื่นที่ไม่ใช่ตัวนี้
+      const otherSum = getOtherAssetsSum(key);
+      let maxAllowed = myState.money - otherSum;
       if (key === 'insurance') {
-        val = Math.min(20000, val);
-      } else {
-        val = Math.min(myState.money, val);
+        maxAllowed = Math.min(20000, maxAllowed);
+      }
+
+      // ป้องกันการกรอกเกินงบที่มีอยู่จริง
+      if (val > maxAllowed) {
+        val = maxAllowed;
       }
 
       slider.value = val;
@@ -182,11 +203,16 @@ function setupSlidersAndInputs() {
       // แปลงเปอร์เซ็นต์เป็นยอดเงินบาทจริง
       let val = Math.round((pctVal / 100) * myState.money);
 
-      // ตรวจสอบและปัดค่าให้อยู่ในช่วงเงินจำกัดของตัวเอง
+      // คำนวณเงินรวมของสินทรัพย์อื่นที่ไม่ใช่ตัวนี้
+      const otherSum = getOtherAssetsSum(key);
+      let maxAllowed = myState.money - otherSum;
       if (key === 'insurance') {
-        val = Math.min(20000, val);
-      } else {
-        val = Math.min(myState.money, val);
+        maxAllowed = Math.min(20000, maxAllowed);
+      }
+
+      // ป้องกันการแปลงแล้วเกินงบที่มีอยู่จริง
+      if (val > maxAllowed) {
+        val = maxAllowed;
       }
 
       slider.value = val;
@@ -238,26 +264,13 @@ function updatePercentagesAndSummary() {
 
   const remaining = myState.money - totalAllocated;
 
-  // ปรับเพดานสไลเดอร์แต่ละชิ้นให้เป็นค่าคงที่ เพื่อให้เลื่อนได้เป็นอิสระต่อกัน (ไม่ล็อกสไลเดอร์ตัวอื่น)
-  ASSETS.forEach(key => {
-    const slider = document.getElementById(`slide-${key}`);
-    if (key === 'insurance') {
-      slider.max = 20000;
-    } else {
-      slider.max = myState.money;
-    }
-  });
+  // เอาโค้ดปรับ .max แบบไดนามิกออกทั้งหมด เพื่อป้องกันการกระตุก/สั่นไหวของตัวจับสไลเดอร์ตัวอื่นบนเบราว์เซอร์มือถือ
   
-  // อัปเดตกล่องแสดงเงินกองกลางขนาดใหญ่ด้านบนสุดของการลงทุน
+  // อัปเดตกล่องแสดงเงินกองกลางขนาดใหญ่ด้านบนสุดของการลงทุน (การันตีค่าคงเหลือไม่มีทางต่ำกว่า 0)
   const cashPoolValEl = document.getElementById('cash-pool-display-val');
   cashPoolValEl.innerText = `${remaining.toLocaleString()} ฿`;
-  if (remaining < 0) {
-    cashPoolValEl.style.color = 'var(--neon-red)';
-    cashPoolValEl.style.textShadow = '0 0 10px var(--neon-red)';
-  } else {
-    cashPoolValEl.style.color = 'var(--neon-green)';
-    cashPoolValEl.style.textShadow = '0 0 10px var(--neon-green)';
-  }
+  cashPoolValEl.style.color = 'var(--neon-green)';
+  cashPoolValEl.style.textShadow = '0 0 10px var(--neon-green)';
   
   // อัปเดตข้อมูลส่วนสรุปการจัดสรรเงินด้านล่าง
   document.getElementById('summary-allocated-val').innerText = `${totalAllocated.toLocaleString()} ฿`;
@@ -266,20 +279,14 @@ function updatePercentagesAndSummary() {
   const remainingValEl = document.getElementById('summary-remaining-val');
   remainingValEl.innerText = `${remaining.toLocaleString()} ฿`;
 
-  // ตรวจสอบความถูกต้องและแจ้งเตือนปุ่มส่งแผนเมื่อเงินติดลบ
+  // รับรองไม่มีการเลื่อนล้นจนติดลบ และปุ่ม Submit พร้อมกดทำงานได้ตลอดเวลาอย่างราบรื่น
   const cashWrap = document.getElementById('summary-cash-wrap');
+  cashWrap.classList.remove('error');
+
   const submitBtn = document.getElementById('btn-submit-alloc');
-  if (remaining < 0) {
-    cashWrap.classList.add('error');
-    submitBtn.disabled = true;
-    submitBtn.style.opacity = '0.5';
-    submitBtn.innerText = 'เงินเกินจำนวนที่มี! (OVER BUDGET)';
-  } else {
-    cashWrap.classList.remove('error');
-    submitBtn.disabled = false;
-    submitBtn.style.opacity = '1';
-    submitBtn.innerText = 'ส่งแผนการลงทุน (SUBMIT)';
-  }
+  submitBtn.disabled = false;
+  submitBtn.style.opacity = '1';
+  submitBtn.innerText = 'ส่งแผนการลงทุน (SUBMIT)';
 }
 
 // 3. ผูกปุ่มการโต้ตอบหน้าเว็บ
