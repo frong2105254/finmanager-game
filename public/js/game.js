@@ -9,6 +9,18 @@ const BACKEND_URL = (window.location.hostname === 'localhost' || window.location
 
 const socket = io(BACKEND_URL);
 
+// จัดการตรวจสอบและกู้คืนสิทธิ์เข้าร่วมห้องเล่นเกมโดยอัตโนมัติเมื่อเกิดการเชื่อมต่อใหม่ (Auto-Reconnect)
+socket.on('connect', () => {
+  console.log('Socket connected/reconnected:', socket.id);
+  if (myState.roomCode && myState.name) {
+    console.log(`Auto-rejoining room ${myState.roomCode} as ${myState.name}`);
+    socket.emit('joinRoom', {
+      roomCode: myState.roomCode,
+      playerName: `${myState.avatar} ${myState.name}`
+    });
+  }
+});
+
 // ฟังก์ชันล็อก/ปลดล็อกการเลื่อนของ Body สำหรับช่วยแก้ปัญหาสกรอลล์บนมือถือ (iOS)
 function setBodyScroll(scrollable) {
   if (scrollable) {
