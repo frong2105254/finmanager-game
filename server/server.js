@@ -87,6 +87,41 @@ io.on('connection', (socket) => {
       return;
     }
 
+    const targetBaseName = getBaseName(playerName).toLowerCase();
+
+    // ตรวจสอบว่าผู้เล่นเคยเข้าร่วมห้องนี้แล้วหลุดไป (Reconnect)
+    const existingPlayer = room.players.find(p => getBaseName(p.name).toLowerCase() === targetBaseName);
+
+    if (existingPlayer) {
+      if (existingPlayer.isConnected) {
+        socket.emit('errorMsg', 'ชื่อผู้เล่นนี้กำลังเชื่อมต่อและเล่นอยู่ในห้องนี้');
+        return;
+      }
+
+      // เปลี่ยนข้อมูล Socket ID และสถานะการเชื่อมต่อใหม่
+      existingPlayer.id = socket.id;
+      existingPlayer.isConnected = true;
+      socket.join(code);
+
+      console.log(`Player ${existingPlayer.name} reconnected to room ${code}`);
+
+      // ส่งข้อความยืนยันเข้าร่วมห้องสำเร็จ
+      socket.emit('roomJoined', { roomCode: code, player: existingPlayer });
+
+      // ดึงสถานะห้องปัจจุบันส่งไปประมวลผลต่อ
+      if (room.status === 'playing' || room.status === 'finished') {
+        socket.emit('gameReconnected', {
+          roomState: getCleanRoomState(room),
+          player: existingPlayer
+        });
+      }
+
+      // อัปเดตข้อมูลห้องพักให้ทุกคนทราบ
+      io.to(code).emit('lobbyUpdate', getCleanRoomState(room));
+      return;
+    }
+
+    // กรณีปกติสำหรับผู้เล่นใหม่
     if (room.status !== 'lobby') {
       socket.emit('errorMsg', 'ห้องนี้เริ่มเกมไปแล้ว หรือจบเกมไปแล้ว');
       return;
@@ -97,8 +132,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    // ตรวจสอบชื่อซ้ำ
-    const isNameTaken = room.players.some(p => p.name.toLowerCase() === playerName.toLowerCase());
+    // ตรวจสอบชื่อซ้ำ (สำหรับผู้เล่นใหม่)
+    const isNameTaken = room.players.some(p => getBaseName(p.name).toLowerCase() === targetBaseName);
     if (isNameTaken) {
       socket.emit('errorMsg', 'ชื่อนี้ถูกใช้ไปแล้วในห้องนี้ กรุณาใช้ชื่ออื่น');
       return;
@@ -349,6 +384,16 @@ io.on('connection', (socket) => {
     }
   });
 });
+
+// ฟังก์ชันแกะชื่อผู้เล่นตัดส่วนไอคอนอวาตาร์ออกเพื่อใช้ในการ Reconnect
+function getBaseName(fullName) {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(' ');
+  if (parts.length > 1) {
+    return parts.slice(1).join(' ');
+  }
+  return fullName;
+}
 
 // ฟังก์ชันนำผู้เล่นเข้าห้อง
 function joinPlayerToRoom(socket, roomCode, playerName, isHost) {

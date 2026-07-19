@@ -590,6 +590,60 @@ function setupSocketListeners() {
     });
   });
 
+  // ผู้เล่นเชื่อมต่อกลับเข้ามาในเกมกลางคัน (Reconnect)
+  socket.on('gameReconnected', ({ roomState, player }) => {
+    currentRoomState = roomState;
+    myState.id = player.id;
+    myState.roomCode = roomState.code;
+    myState.isHost = player.isHost;
+    
+    // ดึงอวาตาร์และชื่อจากฝั่งเซิร์ฟเวอร์
+    const nameParts = player.name.split(' ');
+    if (nameParts.length > 1) {
+      myState.avatar = nameParts[0];
+      myState.name = nameParts.slice(1).join(' ');
+    } else {
+      myState.avatar = '🐱';
+      myState.name = player.name;
+    }
+    
+    myState.money = player.money;
+    myState.isBankrupt = player.isBankrupt;
+    myState.hasSubmitted = player.hasSubmitted;
+
+    // ตั้งค่าหน้าจอและหน้าตาผู้เล่นปัจจุบัน
+    document.getElementById('my-name-display').innerText = `ผู้เล่น: ${myState.name}`;
+    document.getElementById('my-avatar-display').innerHTML = replaceAvatarInText(myState.avatar);
+
+    showScreen('screen-game');
+    updateGameBoard(roomState);
+
+    // ปรับสไลเดอร์ตามพอร์ตล่าสุดที่มีอยู่จริง
+    loadAllocationToSliders(player.allocation);
+
+    // ตั้งสถานะคำแนะนำตัวอักษร
+    if (myState.isBankrupt) {
+      document.getElementById('my-status-val').innerText = 'ล้มละลาย (SPECTATING)';
+      document.getElementById('my-status-val').className = 'stat-value bankrupt';
+      disableAllocationForm(true);
+    } else {
+      if (myState.hasSubmitted) {
+        document.getElementById('my-status-val').innerText = 'ส่งการลงทุนแล้ว รอกลุ่มผู้เล่นอื่น...';
+        document.getElementById('my-status-val').className = 'stat-value status';
+        disableAllocationForm(true);
+      } else {
+        document.getElementById('my-status-val').innerText = 'กำลังวางแผน...';
+        document.getElementById('my-status-val').className = 'stat-value status';
+        disableAllocationForm(false);
+      }
+    }
+
+    // หากจบเกมแล้ว แสดงผลผู้ชนะท้ายเกมทันทีโดยไม่มีดีเลย์
+    if (roomState.status === 'finished') {
+      showWinnerCeremony(roomState);
+    }
+  });
+
   // แจ้งว่าผู้เล่นรายอื่นส่งแผนเงินลงทุนแล้ว
   socket.on('playerSubmitted', ({ playerId, name }) => {
     if (playerId !== myState.id) {
