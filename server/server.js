@@ -606,7 +606,7 @@ function resolveRound(room) {
     let artToysMod = chosenEvent.effects.artToys;
     if (artToysMod === undefined) {
       if (chosenEvent.theme === 'funny' || chosenEvent.theme === 'bull' || chosenEvent.theme === 'crypto') {
-        artToysMod = (Math.random() * 2.5) - 0.5; // กำไรสูงสุ่ม (-50% ถึง +200%)
+        artToysMod = (Math.random() * 5.5) - 0.5; // กำไรสูงสุ่ม (-50% ถึง +500%)
       } else if (chosenEvent.theme === 'bear' || chosenEvent.theme === 'disaster' || chosenEvent.theme === 'pandemic') {
         artToysMod = -(Math.random() * 0.9) - 0.05; // ขาดทุนหนัก (-5% ถึง -95%)
       } else {
