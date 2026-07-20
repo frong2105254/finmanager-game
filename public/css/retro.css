@@ -654,6 +654,10 @@ body::after {
   transform: scale(0.8);
   transition: transform 0.3s ease;
   position: relative;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .cutscene-overlay.show .cutscene-box {
@@ -778,8 +782,13 @@ body::after {
   max-width: 700px;
   width: 90%;
   text-align: center;
-  padding: 40px 20px;
-  margin: 0 auto 30px; /* จัดกึ่งกลางและเว้นระยะด้านล่าง */
+  padding: 30px 20px;
+  margin: 0 auto;
+  position: relative;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .trophy-container {

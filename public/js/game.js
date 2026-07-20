@@ -48,6 +48,8 @@ let myState = {
   hasSubmitted: false
 };
 
+let myLastAllocation = null;
+
 // ข้อมูลสถานะห้องปัจจุบัน
 let currentRoomState = null;
 
@@ -459,6 +461,7 @@ function submitMyAllocation() {
   // ล็อกปุ่มกดและฟิลด์อินพุตชั่วคราวเพื่อป้องกันการกดเบิ้ล
   disableAllocationForm(true);
 
+  myLastAllocation = Object.assign({}, allocation);
   socket.emit('submitAllocation', allocation);
   
   document.getElementById('my-status-val').innerText = 'ส่งการลงทุนแล้ว รอกลุ่มผู้เล่นอื่น...';
@@ -704,6 +707,33 @@ function setupSocketListeners() {
       document.getElementById('my-status-val').className = 'stat-value status';
       disableAllocationForm(false);
       
+      // แสดงเปอร์เซ็นต์กำไร/ขาดทุนต่อท้ายชื่อสินทรัพย์
+      if (myLastAllocation && me.history && me.history.length > 0) {
+        const lastHist = me.history[me.history.length - 1];
+        const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
+        assetKeys.forEach(k => {
+          const inputEl = document.getElementById('alloc-' + k);
+          if (inputEl) {
+            const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
+            let baseText = nameEl.getAttribute('data-base-name');
+            if (!baseText) {
+              baseText = nameEl.innerHTML;
+              nameEl.setAttribute('data-base-name', baseText);
+            }
+            if (myLastAllocation[k] > 0) {
+              let oldVal = myLastAllocation[k];
+              let newVal = lastHist.allocation[k];
+              let pct = ((newVal - oldVal) / oldVal) * 100;
+              let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
+              let sign = pct > 0 ? '+' : '';
+              nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
+            } else {
+              nameEl.innerHTML = baseText; // ไม่ได้ลงทุนรอบที่แล้ว
+            }
+          }
+        });
+      }
+
       // โหลดเงินลงทุนตามมูลค่าจริงหลังผ่านอีเวนต์ โดยไม่ต้องรีเซ็ตกลับหน้าแรก
       loadAllocationToSliders(me.allocation);
     }
