@@ -712,7 +712,7 @@ function setupSocketListeners() {
         const lastHist = me.history[me.history.length - 1];
         const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
         assetKeys.forEach(k => {
-          const inputEl = document.getElementById('alloc-' + k);
+          const inputEl = document.getElementById('slide-' + k); // <--- FIXED ID!
           if (inputEl) {
             const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
             let baseText = nameEl.getAttribute('data-base-name');

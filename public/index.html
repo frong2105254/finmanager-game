@@ -452,18 +452,13 @@
         <h1 class="retro-font" style="font-size: 1.8rem; color: var(--neon-yellow);">วิคตอรี่!</h1>
         <p class="retro-font" style="font-size: 0.65rem; color: #8f85bd; margin-bottom: 20px;">จบรอบสุดท้ายเรียบร้อย</p>
 
-        <!-- รูปภาพเฉลองชัยชนะแบบ 8-bit -->
-        <div class="cutscene-image-container" style="height: 200px; max-width: 400px; margin: 0 auto 20px;">
-          <img src="assets/winner_scene.png" id="winner-img" class="cutscene-image" alt="Winner Celebrate" onerror="this.style.display='none'; document.getElementById('winner-placeholder').style.display='flex';">
-          <div id="winner-placeholder" class="cutscene-placeholder">
-            <div class="icon">👑</div>
-            <div class="retro-font" style="font-size: 0.6rem;">GAME OVER</div>
-          </div>
+        <div style="font-size: 0.90rem; color: #fff; margin-bottom: 15px;" class="retro-font">สุดยอดนักลงทุนมือฉมังคนต่อไปของโลกใบนี้ คือ !!!!</div>
+
+        <!-- กรอบสี่เหลี่ยมแสดงชื่อผู้ชนะและจำนวนเงิน -->
+        <div class="cutscene-image-container pixel-border-neon" style="padding: 25px 15px; max-width: 400px; margin: 0 auto 30px; background-color: rgba(0,0,0,0.5); height: auto; min-height: 150px; display: flex; flex-direction: column; justify-content: center;">
+          <div class="winner-name" id="winner-name-val" style="margin: 0 0 10px 0; font-size: 2.2rem;">---</div>
+          <div class="winner-wealth-val" id="winner-wealth-val-label" style="font-size: 1.8rem;">฿0</div>
         </div>
-        
-        <div style="font-size: 0.90rem; color: #fff;" class="retro-font">สุดยอดนักลงทุนมือฉมังคนต่อไปของโลกใบนี้ คือ !!!!</div>
-        <div class="winner-name" id="winner-name-val">---</div>
-        <div class="winner-wealth-val" id="winner-wealth-val-label">฿0</div>
 
         <div class="leaderboard">
           <h3 class="leaderboard-title">กระดานจัดอันดับผู้เล่น</h3>
