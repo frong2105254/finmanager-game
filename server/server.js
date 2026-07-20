@@ -606,7 +606,13 @@ function resolveRound(room) {
     let artToysMod = chosenEvent.effects.artToys;
     if (artToysMod === undefined) {
       if (chosenEvent.theme === 'funny' || chosenEvent.theme === 'bull' || chosenEvent.theme === 'crypto') {
-        artToysMod = (Math.random() * 5.5) - 0.5; // กำไรสูงสุ่ม (-50% ถึง +500%)
+        // ระบบแจ็กพอต: มีโอกาส 10% ที่จะเกิดกระแสไวรัล ได้กำไร +500% รวยเละ
+        if (Math.random() < 0.10) {
+          artToysMod = 5.0; // แจ็กพอตแตก! กำไร 5 เท่า
+        } else {
+          // ถ้าไม่แตกแจ็กพอต จะเป็นการทำกำไร/ขาดทุนแบบปกติ (-30% ถึง +120%)
+          artToysMod = (Math.random() * 1.5) - 0.3;
+        }
       } else if (chosenEvent.theme === 'bear' || chosenEvent.theme === 'disaster' || chosenEvent.theme === 'pandemic') {
         artToysMod = -(Math.random() * 0.9) - 0.05; // ขาดทุนหนัก (-5% ถึง -95%)
       } else {
