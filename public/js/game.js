@@ -927,7 +927,7 @@ function updateGameBoard(roomState) {
       const icon = THEME_ICONS[ev.theme] || '❓';
       item.innerHTML = `
         <span class="log-round">รอบที่ ${roundNum}:</span>
-        <span>${icon} <span class="log-event-name">${ev.title}</span></span>
+        <span>${icon} <span class="log-event-name">${ev.title.replace(/\s+/g, '<br>')}</span></span>
         <div style="font-size:0.75rem; color:#8f85bd; margin-top:2px;">${ev.description}</div>
       `;
       historyWrap.appendChild(item);
