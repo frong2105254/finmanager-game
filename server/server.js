@@ -734,6 +734,7 @@ function resolveRound(room) {
         artToys: newArtToys,
         cash: newCash
       },
+      preAllocation: Object.assign({}, alloc),
       netChange: newTotal - oldMoney,
       medicalExpenseDetails: chosenEvent.medicalExpense ? {
         baseExpense: chosenEvent.medicalExpense,

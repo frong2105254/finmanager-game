@@ -708,30 +708,34 @@ function setupSocketListeners() {
       disableAllocationForm(false);
       
       // แสดงเปอร์เซ็นต์กำไร/ขาดทุนต่อท้ายชื่อสินทรัพย์
-      if (myLastAllocation && me.history && me.history.length > 0) {
+      if (me.history && me.history.length > 0) {
         const lastHist = me.history[me.history.length - 1];
-        const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
-        assetKeys.forEach(k => {
-          const inputEl = document.getElementById('slide-' + k); // <--- FIXED ID!
-          if (inputEl) {
-            const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
-            let baseText = nameEl.getAttribute('data-base-name');
-            if (!baseText) {
-              baseText = nameEl.innerHTML;
-              nameEl.setAttribute('data-base-name', baseText);
+        const preAlloc = lastHist.preAllocation;
+        const postAlloc = lastHist.allocation;
+        if (preAlloc) {
+          const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
+          assetKeys.forEach(k => {
+            const inputEl = document.getElementById('slide-' + k);
+            if (inputEl) {
+              const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
+              let baseText = nameEl.getAttribute('data-base-name');
+              if (!baseText) {
+                baseText = nameEl.innerHTML;
+                nameEl.setAttribute('data-base-name', baseText);
+              }
+              const oldVal = preAlloc[k] || 0;
+              const newVal = postAlloc[k] || 0;
+              if (oldVal > 0) {
+                let pct = ((newVal - oldVal) / oldVal) * 100;
+                let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
+                let sign = pct > 0 ? '+' : '';
+                nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
+              } else {
+                nameEl.innerHTML = baseText; // ไม่ได้ลงทุนรอบที่แล้ว
+              }
             }
-            if (myLastAllocation[k] > 0) {
-              let oldVal = myLastAllocation[k];
-              let newVal = lastHist.allocation[k];
-              let pct = ((newVal - oldVal) / oldVal) * 100;
-              let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
-              let sign = pct > 0 ? '+' : '';
-              nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
-            } else {
-              nameEl.innerHTML = baseText; // ไม่ได้ลงทุนรอบที่แล้ว
-            }
-          }
-        });
+          });
+        }
       }
 
       // โหลดเงินลงทุนตามมูลค่าจริงหลังผ่านอีเวนต์ โดยไม่ต้องรีเซ็ตกลับหน้าแรก
@@ -905,8 +909,8 @@ function triggerCutscene(event, myPlayerData) {
   // ซ่อนกล่อง placeholder ดั้งเดิมไว้ในกรณีที่มีรูปภาพ
   document.getElementById('cutscene-placeholder-box').style.display = 'none';
 
-  // รายละเอียดชื่อหัวข้อคำอธิบายเหตุการณ์
-  document.getElementById('cutscene-title-val').innerText = event.title;
+  // รายละเอียดชื่อหัวข้อคำอธิบายเหตุการณ์ (แทนที่เว้นวรรคยาวๆ ด้วย <br> เพื่อให้อ่านง่ายและไม่ตกหล่นทับซ้อน)
+  document.getElementById('cutscene-title-val').innerHTML = event.title.replace(/\s+/g, '<br>');
   document.getElementById('cutscene-desc-val').innerText = event.description;
 
   // เรนเดอร์เอฟเฟกต์ต่อสินทรัพย์ต่างๆ
