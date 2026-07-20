@@ -714,57 +714,71 @@ function setupSocketListeners() {
       disableAllocationForm(false);
       
       // แสดงเปอร์เซ็นต์กำไร/ขาดทุนต่อท้ายชื่อสินทรัพย์ (ระบบ Double-bulletproof)
-      const lastHist = (me.history && me.history.length > 0) ? me.history[me.history.length - 1] : null;
-      const postAlloc = lastHist ? lastHist.allocation : null;
+      const debugEl = document.getElementById('client-debug-box');
+      try {
+        const lastHist = (me && me.history && me.history.length > 0) ? me.history[me.history.length - 1] : null;
+        const postAlloc = lastHist ? lastHist.allocation : null;
 
-      // พยายามดึง preAllocation จาก localStorage หรือประวัติฝั่งเซิร์ฟเวอร์
-      let preAlloc = null;
-      if (myLastAllocation) {
-        preAlloc = myLastAllocation;
-      } else if (lastHist && lastHist.preAllocation) {
-        preAlloc = lastHist.preAllocation;
-      }
+        // พยายามดึง preAllocation จาก localStorage หรือประวัติฝั่งเซิร์ฟเวอร์
+        let preAlloc = null;
+        if (myLastAllocation) {
+          preAlloc = myLastAllocation;
+        } else if (lastHist && lastHist.preAllocation) {
+          preAlloc = lastHist.preAllocation;
+        }
 
-      const BASE_RETURNS = {
-        bank: 0.005,
-        govBonds: 0.015,
-        corpBonds: 0.02,
-        gold: 0.0,
-        realEstate: 0.04,
-        stocks: 0.03,
-        bitcoin: -0.01,
-        artToys: -0.05
-      };
+        if (debugEl) {
+          // โชว์ดีบั๊กเพื่อตรวจสอบค่าจริงๆ ที่วิ่งอยู่บนบราวเซอร์
+          debugEl.style.display = 'block';
+          debugEl.innerHTML = `[DIAGNOSTICS] me: ${!!me} | hist_len: ${me?.history?.length || 0} | preAlloc: ${JSON.stringify(preAlloc)} | myLastAlloc: ${JSON.stringify(myLastAllocation)}`;
+        }
 
-      if (preAlloc) {
-        const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
-        assetKeys.forEach(k => {
-          const inputEl = document.getElementById('slide-' + k);
-          if (inputEl) {
-            const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
-            let baseText = nameEl.getAttribute('data-base-name');
-            if (!baseText) {
-              baseText = nameEl.innerHTML;
-              nameEl.setAttribute('data-base-name', baseText);
-            }
-            const oldVal = preAlloc[k] || 0;
-            const newVal = postAlloc ? (postAlloc[k] || 0) : 0;
-            if (oldVal > 0) {
-              let pct = 0;
-              if (k === 'artToys') {
-                pct = ((newVal - oldVal) / oldVal) * 100;
-              } else {
-                let yieldVal = (event && event.effects && event.effects[k] !== undefined) ? event.effects[k] : BASE_RETURNS[k];
-                pct = yieldVal * 100;
+        const BASE_RETURNS = {
+          bank: 0.005,
+          govBonds: 0.015,
+          corpBonds: 0.02,
+          gold: 0.0,
+          realEstate: 0.04,
+          stocks: 0.03,
+          bitcoin: -0.01,
+          artToys: -0.05
+        };
+
+        if (preAlloc) {
+          const assetKeys = ['bank', 'govBonds', 'corpBonds', 'gold', 'realEstate', 'stocks', 'bitcoin', 'artToys'];
+          assetKeys.forEach(k => {
+            const inputEl = document.getElementById('slide-' + k);
+            if (inputEl) {
+              const nameEl = inputEl.closest('.asset-card').querySelector('.asset-name');
+              let baseText = nameEl.getAttribute('data-base-name');
+              if (!baseText) {
+                baseText = nameEl.innerHTML;
+                nameEl.setAttribute('data-base-name', baseText);
               }
-              let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
-              let sign = pct > 0 ? '+' : '';
-              nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
-            } else {
-              nameEl.innerHTML = baseText; // ไม่ได้ลงทุนรอบที่แล้ว
+              const oldVal = preAlloc[k] || 0;
+              const newVal = postAlloc ? (postAlloc[k] || 0) : 0;
+              if (oldVal > 0) {
+                let pct = 0;
+                if (k === 'artToys') {
+                  pct = ((newVal - oldVal) / oldVal) * 100;
+                } else {
+                  let yieldVal = (event && event.effects && event.effects[k] !== undefined) ? event.effects[k] : BASE_RETURNS[k];
+                  pct = yieldVal * 100;
+                }
+                let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
+                let sign = pct > 0 ? '+' : '';
+                nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
+              } else {
+                nameEl.innerHTML = baseText; // ไม่ได้ลงทุนรอบที่แล้ว
+              }
             }
-          }
-        });
+          });
+        }
+      } catch (err) {
+        if (debugEl) {
+          debugEl.style.display = 'block';
+          debugEl.innerHTML = `[ERROR] ${err.message}\nStack: ${err.stack}`;
+        }
       }
 
       // โหลดเงินลงทุนตามมูลค่าจริงหลังผ่านอีเวนต์ โดยไม่ต้องรีเซ็ตกลับหน้าแรก
