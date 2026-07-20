@@ -79,70 +79,70 @@ const events = [
     theme: "bear",
     title: "วิกฤตซับไพรม์รอบใหม่!",
     description: "ฟองสบู่การเงินต่างประเทศแตกสะท้านโลก หุ้นทั่วโลกดิ่งเหวทันที ทองคำกลายเป็นหลุมหลบภัย",
-    effects: { stocks: -0.30, bitcoin: -0.40, gold: 0.20, bank: 0.01 }
+    effects: { stocks: -0.20, bitcoin: -0.40, gold: 0.20, bank: 0.01 }
   },
   {
     id: 12,
     theme: "bear",
     title: "ความขัดแย้งทางการค้าระดับโลก",
     description: "ประเทศมหาอำนาจประกาศตั้งกำแพงภาษีใส่กัน การส่งออกชะงักงัน หุ้นร่วงระนาว หุ้นกู้เริ่มมีความเสี่ยง",
-    effects: { stocks: -0.22, corpBonds: -0.05, gold: 0.12 }
+    effects: { stocks: -0.12, corpBonds: -0.05, gold: 0.12 }
   },
   {
     id: 13,
     theme: "bear",
     title: "ธนาคารพาณิชย์ยักษ์ใหญ่ปิดตัว",
     description: "ข่าวลือสถาบันการเงินขาดสภาพคล่องทำเอาคนแห่ไปถอนเงิน ดอกเบี้ยร่วง หุ้นร่วงยับ",
-    effects: { bank: -0.05, stocks: -0.25, corpBonds: -0.08, gold: 0.15 }
+    effects: { bank: -0.05, stocks: -0.15, corpBonds: -0.08, gold: 0.15 }
   },
   {
     id: 14,
     theme: "bear",
     title: "วิกฤตพลังงาน ขาดแคลนน้ำมัน",
     description: "ราคาน้ำมันดิบพุ่งสูงเกินต้านทาน ต้นทุนการผลิตพุ่งสูงปรี๊ด หุ้นขนส่งร่วงหนัก อัตราเงินเฟ้อบีบให้หุ้นลดลง",
-    effects: { stocks: -0.20, corpBonds: -0.04, gold: 0.10 }
+    effects: { stocks: -0.10, corpBonds: -0.04, gold: 0.10 }
   },
   {
     id: 15,
     theme: "bear",
     title: "ค่าเงินบาทผันผวนอย่างรุนแรง",
     description: "เงินทุนไหลออกนอกประเทศอย่างรวดเร็ว ตลาดหุ้นปั่นป่วน นักลงทุนต่างชาติเทขายสินทรัพย์เสี่ยงทุกชนิด",
-    effects: { stocks: -0.26, bitcoin: -0.30, govBonds: 0.01 }
+    effects: { stocks: -0.16, bitcoin: -0.30, govBonds: 0.01 }
   },
   {
     id: 16,
     theme: "bear",
     title: "เกิดฟองสบู่แตกในกลุ่มเทคโนโลยี",
     description: "บริษัทเทคสตาร์ทอัพที่เคยรุ่งเรืองพากันเจ๊ง หุ้นกลุ่มไอทีและบิตคอยน์โดนเทขายอย่างบ้าคลั่ง",
-    effects: { stocks: -0.28, bitcoin: -0.35, gold: 0.08 }
+    effects: { stocks: -0.18, bitcoin: -0.35, gold: 0.08 }
   },
   {
     id: 17,
     theme: "bear",
     title: "รัฐบาลผิดนัดชำระหนี้ต่างประเทศ",
     description: "ข่าวลือสะพัดว่ารัฐบาลขาดเสถียรภาพทางการคลัง พันธบัตรมูลค่าลดลงชั่วคราว หุ้นดิ่งเหว",
-    effects: { govBonds: -0.10, stocks: -0.24, bank: -0.03, gold: 0.18 }
+    effects: { govBonds: -0.10, stocks: -0.14, bank: -0.03, gold: 0.18 }
   },
   {
     id: 18,
     theme: "bear",
     title: "เงินเฟ้อฝังลึกบดขยี้กำไรบริษัท",
     description: "ต้นทุนวัตถุดิบและค่าแรงพุ่งสูงขึ้นแต่บริษัทไม่สามารถขึ้นราคาขายได้ หุ้นกลุ่มอุตสาหกรรมโดนทุบหนัก",
-    effects: { stocks: -0.18, corpBonds: -0.03 }
+    effects: { stocks: -0.08, corpBonds: -0.03 }
   },
   {
     id: 19,
     theme: "bear",
     title: "ความเชื่อมั่นผู้บริโภคต่ำสุดขีด",
     description: "ประชาชนรัดเข็มขัด ไม่ยอมจับจ่ายใช้สอย ร้านค้าเงียบเหงา ยอดขายอสังหาฯ และหุ้นดิ่งลง",
-    effects: { stocks: -0.15, realEstate: -0.08, bank: 0.01 }
+    effects: { stocks: -0.06, realEstate: -0.08, bank: 0.01 }
   },
   {
     id: 20,
     theme: "bear",
     title: "ระบบชำระเงินล่มทั่วประเทศ",
     description: "ระบบโอนเงินขัดข้องนานหลายวัน เกิดความตื่นตระหนกในระบบธนาคาร หุ้นตกบอร์ดแดงเถือก",
-    effects: { stocks: -0.20, bank: -0.02, bitcoin: 0.05, gold: 0.05 }
+    effects: { stocks: -0.10, bank: -0.02, bitcoin: 0.05, gold: 0.05 }
   },
 
   // ==================== THEME 3: โรคระบาด/ปัญหาสุขภาพ (pandemic) ====================
@@ -153,7 +153,7 @@ const events = [
     title: "ไข้หวัดซอมบี้ระบาดเบาๆ!",
     description: "มีข่าวว่าคนติดเชื้อเดินกัดกันในตลาด ประชาชนกักตัวอยู่บ้าน หุ้นห้างสรรพสินค้าดิ่งเหว",
     medicalExpense: 200000,
-    effects: { stocks: -0.15, realEstate: -0.10, gold: 0.05 }
+    effects: { stocks: -0.06, realEstate: -0.10, gold: 0.05 }
   },
   {
     id: 22,
@@ -161,7 +161,7 @@ const events = [
     title: "ไวรัสสายพันธุ์ใหม่ 'ขี้เกียจเรื้อรัง'",
     description: "คนเป็นไวรัสนี้จะนอนเฉยๆ ไม่ยอมทำงาน ผลผลิตประเทศลดลง ตลาดหุ้นและอสังหาฯ ร่วงระนาว",
     medicalExpense: 150000,
-    effects: { stocks: -0.18, realEstate: -0.12, govBonds: 0.01 }
+    effects: { stocks: -0.08, realEstate: -0.12, govBonds: 0.01 }
   },
   {
     id: 23,
@@ -169,7 +169,7 @@ const events = [
     title: "ไข้หวัดใหญ่สายพันธุ์ไดโนเสาร์",
     description: "ไข้หวัดสลับสายพันธุ์ทำเอาไข้สูงจามสะเทือนเลื่อนลั่น โรงพยาบาลล้นเตียง ค่ารักษาสูงปรี๊ด",
     medicalExpense: 250000,
-    effects: { stocks: -0.10, corpBonds: -0.02, gold: 0.08 }
+    effects: { stocks: -0.02, corpBonds: -0.02, gold: 0.08 }
   },
   {
     id: 24,
@@ -177,7 +177,7 @@ const events = [
     title: "โรคภูมิแพ้ฝุ่น PM 25.5",
     description: "ฝุ่นหนาจนมองไม่เห็นคนตรงหน้า ทุกคนต้องซื้อเครื่องฟอกอากาศและยารักษาปอดเป็นการด่วน",
     medicalExpense: 270000,
-    effects: { stocks: -0.08, realEstate: -0.05 }
+    effects: { stocks: -0.01, realEstate: -0.05 }
   },
   {
     id: 25,
@@ -185,7 +185,7 @@ const events = [
     title: "อหิวาตกโรคในทุเรียนแปลงพันธุ์",
     description: "คนกินทุเรียนแล้วท้องร่วงรุนแรงหามส่งโรงพยาบาลพัลวัน ธุรกิจอาหารและท่องเที่ยวซบเซา",
     medicalExpense: 170000,
-    effects: { stocks: -0.12, realEstate: -0.04 }
+    effects: { stocks: -0.04, realEstate: -0.04 }
   },
   {
     id: 26,
@@ -193,7 +193,7 @@ const events = [
     title: "ไวรัสมือเท้าปากระบาดในออฟฟิศ",
     description: "คนทำงานออฟฟิศพากันลาป่วยพร้อมกันจนระบบการทำงานชะงัก บริษัทเสียรายได้ หุ้นร่วง",
     medicalExpense: 190000,
-    effects: { stocks: -0.08, corpBonds: -0.03 }
+    effects: { stocks: -0.01, corpBonds: -0.03 }
   },
   {
     id: 27,
@@ -201,7 +201,7 @@ const events = [
     title: "การแพร่ระบาดของโรคตาแดงแฟนตาซี",
     description: "โรคตาแดงติดต่อทางสายตา ทำให้คนต้องปิดตาข้างหนึ่งทำงาน ลำบากและต้องหาหมอหยอดตาราคาแพง",
     medicalExpense: 290000,
-    effects: { stocks: -0.05, bank: 0.01 }
+    effects: { stocks: 0.00, bank: 0.01 }
   },
   {
     id: 28,
@@ -209,7 +209,7 @@ const events = [
     title: "โรคกระดูกพรุนจากการจ้องจอมือถือ",
     description: "วัยรุ่นและคนทำงานกระดูกนิ้วและคอมีปัญหาแห่เข้ารับการบำบัดรักษาพยาบาลด่วน ค่ากายภาพบำบัดบานปลาย",
     medicalExpense: 160000,
-    effects: { stocks: -0.06 }
+    effects: { stocks: -0.01 }
   },
   {
     id: 29,
@@ -217,7 +217,7 @@ const events = [
     title: "ไข้หวัดนกสายพันธุ์กุ๊กๆ",
     description: "เนื้อไก่ขาดแคลนและแพงหูฉี่ คนพากันเจ็บป่วยจากอาหารเป็นพิษ ร้านอาหารสูญเสียรายได้",
     medicalExpense: 180000,
-    effects: { stocks: -0.11, realEstate: -0.06 }
+    effects: { stocks: -0.03, realEstate: -0.06 }
   },
   {
     id: 30,
@@ -225,7 +225,7 @@ const events = [
     title: "วิกฤตไวรัสแมลงสาบเรืองแสง",
     description: "เชื้อโรคแปลกใหม่จากแมลงสาบกลายพันธุ์ทำให้คนมีผื่นคันเรืองแสง ค่ารักษาแพงจัดจนกระเป๋าแบน",
     medicalExpense: 300000,
-    effects: { stocks: -0.20, realEstate: -0.15, gold: 0.10 }
+    effects: { stocks: -0.10, realEstate: -0.15, gold: 0.10 }
   },
 
   // ==================== THEME 4: เงินเฟ้อ/ดอกเบี้ยขึ้น (inflation) ====================
@@ -234,70 +234,70 @@ const events = [
     theme: "inflation",
     title: "กะเพราจานละ 500 บาท!",
     description: "ราคาวัตถุดิบอาหารพุ่งสูงลิ่ว ค่าครองชีพพุ่งชนเพดาน เงินฝากธนาคารได้ดอกเบี้ยเพิ่มขึ้นเพื่อสู้เงินเฟ้อ แต่หุ้นร่วง",
-    effects: { bank: 0.05, govBonds: 0.04, stocks: -0.15, realEstate: 0.05 }
+    effects: { bank: 0.05, govBonds: 0.04, stocks: -0.06, realEstate: 0.05 }
   },
   {
     id: 32,
     theme: "inflation",
     title: "น้ำมันพุ่งทะลุถัง",
     description: "ราคาน้ำมันขายปลีกแพงที่สุดในประวัติศาสตร์ รัฐบาลประกาศขึ้นดอกเบี้ยนโยบายด่วนสกัดกั้นเงินเฟ้อ",
-    effects: { bank: 0.04, govBonds: 0.03, stocks: -0.12, gold: 0.08 }
+    effects: { bank: 0.04, govBonds: 0.03, stocks: -0.04, gold: 0.08 }
   },
   {
     id: 33,
     theme: "inflation",
     title: "ค่าไฟมหาโหด แอร์คือสิ่งต้องห้าม",
     description: "ค่าไฟแพงขึ้นสามเท่า ประชาชนแห่ไปห้างเพื่อรับแอร์ฟรี บริษัทผลิตไฟฟ้าได้ประโยชน์ แต่ธุรกิจทั่วไปแย่",
-    effects: { bank: 0.03, stocks: -0.08, realEstate: -0.04, corpBonds: 0.02 }
+    effects: { bank: 0.03, stocks: -0.01, realEstate: -0.04, corpBonds: 0.02 }
   },
   {
     id: 34,
     theme: "inflation",
     title: "วิกฤตราคาปุ๋ยเคมีพุ่งสูง",
     description: "ปุ๋ยแพงทำเอาผักผลไม้ราคาขึ้นตาม เงินเฟ้อขยับขึ้นอีกระดับ พันธบัตรได้ผลตอบแทนปรับปรุงใหม่เพิ่มขึ้น",
-    effects: { bank: 0.03, govBonds: 0.03, stocks: -0.07 }
+    effects: { bank: 0.03, govBonds: 0.03, stocks: -0.01 }
   },
   {
     id: 35,
     theme: "inflation",
     title: "ดอกเบี้ยเงินฝาก 2 หลักกลับมาแล้ว",
     description: "ธนาคารพาณิชย์แข่งกันออกเงินฝากดอกเบี้ยสูงกระตุ้นการออม เงินไหลออกจากบิตคอยน์และตลาดหุ้นอย่างแรง",
-    effects: { bank: 0.08, govBonds: 0.05, stocks: -0.18, bitcoin: -0.25 }
+    effects: { bank: 0.08, govBonds: 0.05, stocks: -0.08, bitcoin: -0.25 }
   },
   {
     id: 36,
     theme: "inflation",
     title: "เงินเฟ้อขยายตัวทั่วโลก",
     description: "สินค้าส่งเข้าจากต่างประเทศแพงขึ้นทุกประเภท ดอกเบี้ยพันธบัตรดีขึ้นเพื่อล่อใจนักลงทุน",
-    effects: { govBonds: 0.04, bank: 0.03, stocks: -0.10, gold: 0.06 }
+    effects: { govBonds: 0.04, bank: 0.03, stocks: -0.02, gold: 0.06 }
   },
   {
     id: 37,
     theme: "inflation",
     title: "ธนาคารประกาศปรับขึ้นดอกเบี้ยเงินกู้",
     description: "คนเป็นหนี้อสังหาฯ กระอักเลือด ค่าเช่าขยับขึ้นเพื่อชดเชยดอกเบี้ย เงินฝากได้ดอกเบี้ยเพิ่มขึ้นเล็กน้อย",
-    effects: { bank: 0.04, realEstate: 0.06, stocks: -0.14 }
+    effects: { bank: 0.04, realEstate: 0.06, stocks: -0.06 }
   },
   {
     id: 38,
     theme: "inflation",
     title: "ค่าทางด่วนและขนส่งสาธารณะขึ้นราคา",
     description: "การเดินทางมีราคาแพงขึ้น เงินเฟ้อพื้นฐานเพิ่มขึ้น หุ้นกู้บริษัทเอกชนบางแห่งให้ผลตอบแทนดีขึ้นเพื่อจูงใจสู้เงินเฟ้อ",
-    effects: { bank: 0.02, corpBonds: 0.04, stocks: -0.05 }
+    effects: { bank: 0.02, corpBonds: 0.04, stocks: 0.00 }
   },
   {
     id: 39,
     theme: "inflation",
     title: "ราคากระดาษและบรรจุภัณฑ์พุ่ง",
     description: "สินค้าอุปโภคบริโภคปรับขึ้นราคาหน้าชั้นวาง เงินเฟ้อกัดกินมูลค่าเงินสด ทองคำและเงินฝากขยับขึ้น",
-    effects: { bank: 0.03, gold: 0.05, stocks: -0.09 }
+    effects: { bank: 0.03, gold: 0.05, stocks: -0.02 }
   },
   {
     id: 40,
     theme: "inflation",
     title: "มาตรการรัดเข็มขัดทางการเงินระดับโลก",
     description: "ธนาคารกลางสหรัฐฯ ขึ้นดอกเบี้ยต่อเนื่อง ทำให้ไทยต้องขึ้นดอกเบี้ยตาม ดอกเบี้ยฝากพุ่งสูงสุดในรอบทศวรรษ",
-    effects: { bank: 0.06, govBonds: 0.04, stocks: -0.20, bitcoin: -0.22 }
+    effects: { bank: 0.06, govBonds: 0.04, stocks: -0.10, bitcoin: -0.22 }
   },
 
   // ==================== THEME 5: นโยบายรัฐบาล/ภาษี (policy) ====================
@@ -320,7 +320,7 @@ const events = [
     theme: "policy",
     title: "กฎหมายเก็บภาษีที่ดินและสิ่งปลูกสร้างฉบับใหม่",
     description: "เจ้าของตึกแถวและคอนโดให้เช่าโดนเรียกเก็บภาษีเพิ่มขึ้น กระทบรายได้อสังหาฯ อย่างจัง",
-    effects: { realEstate: -0.15, govBonds: 0.03, stocks: -0.04 }
+    effects: { realEstate: -0.15, govBonds: 0.03, stocks: 0.01 }
   },
   {
     id: 44,
@@ -334,14 +334,14 @@ const events = [
     theme: "policy",
     title: "ยกเว้นภาษีดอกเบี้ยเงินฝากและพันธบัตร",
     description: "นโยบายสนับสนุนการออมและช่วยรัฐหาเงิน เงินไหลเข้าซื้อพันธบัตรรัฐบาลหนาแน่น",
-    effects: { govBonds: 0.06, bank: 0.02, stocks: -0.05 }
+    effects: { govBonds: 0.06, bank: 0.02, stocks: 0.00 }
   },
   {
     id: 46,
     theme: "policy",
     title: "ประกาศคว่ำบาตรการค้าระหว่างประเทศ",
     description: "นโยบายการเมืองระหว่างประเทศตึงเครียด หุ้นกู้และหุ้นบริษัทข้ามชาติลดลง ทองคำและพันธบัตรสูงขึ้น",
-    effects: { stocks: -0.12, corpBonds: -0.05, gold: 0.10, govBonds: 0.02 }
+    effects: { stocks: -0.04, corpBonds: -0.05, gold: 0.10, govBonds: 0.02 }
   },
   {
     id: 47,
@@ -355,7 +355,7 @@ const events = [
     theme: "policy",
     title: "เก็บภาษีลาภลอย (Windfall Tax) บริษัทพลังงาน",
     description: "บริษัทน้ำมันและโรงไฟฟ้าโดนรัฐรีดภาษีกำไรส่วนเกิน หุ้นกลุ่มพลังงานดิ่งเหวดึงตลาดหุ้นลงตาม",
-    effects: { stocks: -0.16, corpBonds: -0.04 }
+    effects: { stocks: -0.08, corpBonds: -0.04 }
   },
   {
     id: 49,
@@ -369,7 +369,7 @@ const events = [
     theme: "policy",
     title: "รัฐบาลปรับอัตราดอกเบี้ยบอนด์ยีลด์พุ่ง",
     description: "รัฐบาลต้องการระดมทุนด่วน ออกพันธบัตรรุ่นใหม่ดอกเบี้ยสูงปรี๊ด ดึงเงินออกจากตลาดหุ้นและธนาคาร",
-    effects: { govBonds: 0.08, bank: -0.01, stocks: -0.10 }
+    effects: { govBonds: 0.08, bank: -0.01, stocks: -0.02 }
   },
 
   // ==================== THEME 6: บิตคอยน์ฟีเวอร์ (crypto) ====================
@@ -413,14 +413,14 @@ const events = [
     theme: "crypto",
     title: "แท่นขุดบิตคอยน์ในจีนระเบิดเพราะความร้อน",
     description: "กำลังการขุดลดลงฮวบฮาบ การทำธุรกรรมล่าช้าและค่าธรรมเนียมแพงจัด บิตคอยน์ร่วงหนักชั่วคราว",
-    effects: { bitcoin: -0.30, stocks: -0.02 }
+    effects: { bitcoin: -0.30, stocks: 0.02 }
   },
   {
     id: 57,
     theme: "crypto",
     title: "เกิดกระแสมีมคอยน์ 'หมูเด้ง' พุ่ง 10000 เท่า",
     description: "กระแสเหรียญมีมสัตว์โลกน่ารักทำเอาคนแห่โอนเงินเข้าเว็บคริปโต บิตคอยน์พุ่งตามกระแสโฟโม (FOMO)",
-    effects: { bitcoin: 0.90, bank: -0.04, stocks: -0.05 }
+    effects: { bitcoin: 0.90, bank: -0.04, stocks: 0.00 }
   },
   {
     id: 58,
@@ -471,7 +471,7 @@ const events = [
     theme: "realestate",
     title: "เกิดดินยุบตัวบริเวณแลนด์มาร์คสำคัญ",
     description: "ตึกร้าวและทรุดตัวเนื่องจากระดับน้ำใต้ดินลดลง คนย้ายหนีออกจากพื้นที่ทำเลทอง อสังหาฯ ตกฮวบ",
-    effects: { realEstate: -0.25, stocks: -0.05, gold: 0.05 }
+    effects: { realEstate: -0.25, stocks: 0.00, gold: 0.05 }
   },
   {
     id: 65,
@@ -485,7 +485,7 @@ const events = [
     theme: "realestate",
     title: "วิกฤตฟองสบู่คอนโดล้นตลาด",
     description: "มีคอนโดสร้างใหม่มากเกินไปแต่ไม่มีคนซื้อหรือเช่า ผู้ประกอบการแห่หั่นราคาและลดค่าเช่ายับเยิน",
-    effects: { realEstate: -0.20, corpBonds: -0.06, stocks: -0.10 }
+    effects: { realEstate: -0.20, corpBonds: -0.06, stocks: -0.02 }
   },
   {
     id: 67,
@@ -522,7 +522,7 @@ const events = [
     theme: "gold",
     title: "ความตึงเครียดทางภูมิรัฐศาสตร์ขั้นสุด!",
     description: "เกิดสงครามการค้าระหว่างสองขั้วโลก นักลงทุนกลัวภัยสงคราม แห่ขายหุ้นและคริปโตไปซื้อทองคำกักตุนไว้",
-    effects: { gold: 0.35, stocks: -0.20, bitcoin: -0.25, govBonds: 0.05 }
+    effects: { gold: 0.35, stocks: -0.10, bitcoin: -0.25, govBonds: 0.05 }
   },
   {
     id: 72,
@@ -585,7 +585,7 @@ const events = [
     theme: "gold",
     title: "ความไม่มั่นคงของเงินตราสกุลหลัก",
     description: "เงินตราหลายสกุลเฟ้อจนกลายเป็นเศษกระดาษ คนหนีมาพึ่งทองคำที่เป็นสิ่งมีค่าแท้จริงมาแต่โบราณ",
-    effects: { gold: 0.30, bank: -0.05, stocks: -0.10 }
+    effects: { gold: 0.30, bank: -0.05, stocks: -0.02 }
   },
 
   // ==================== THEME 9: ภัยพิบัติธรรมชาติ (disaster) ====================
@@ -594,70 +594,70 @@ const events = [
     theme: "disaster",
     title: "น้ำท่วมกรุงเทพฯ ครั้งใหญ่!",
     description: "ระดับน้ำสูงถึงเข่า ท่องเที่ยวชะงัก รถติดแหง็ก อสังหาฯ เสียหายยับเยิน หุ้นร่วงหนัก ทองคำพุ่งขึ้นรับความกลัว",
-    effects: { realEstate: -0.30, stocks: -0.20, gold: 0.15, bank: -0.02 }
+    effects: { realEstate: -0.30, stocks: -0.10, gold: 0.15, bank: -0.02 }
   },
   {
     id: 82,
     theme: "disaster",
     title: "พายุไต้ฝุ่น 'พุดดิ้ง' พัดถล่มภาคใต้",
     description: "พายุพัดสวนยางและรีสอร์ตพังยับเยิน หุ้นการท่องเที่ยวและการเกษตรลดฮวบ ต้องกู้เงินฟื้นฟู",
-    effects: { realEstate: -0.22, stocks: -0.15, govBonds: -0.02 }
+    effects: { realEstate: -0.22, stocks: -0.06, govBonds: -0.02 }
   },
   {
     id: 83,
     theme: "disaster",
     title: "แผ่นดินไหวขนาดเล็กใจกลางเมือง",
     description: "ตึกสั่นคลอนทำเอาคนกลัวไม่กล้าอยู่คอนโดชั้นสูงๆ ค่าเช่าอสังหาฯ และราคาอสังหาฯ ร่วงลงระเบิด",
-    effects: { realEstate: -0.20, stocks: -0.08, gold: 0.08 }
+    effects: { realEstate: -0.20, stocks: -0.01, gold: 0.08 }
   },
   {
     id: 84,
     theme: "disaster",
     title: "คลื่นความร้อนทำลายพืชผลทางการเกษตร",
     description: "อากาศร้อนจัดจนผลไม้เน่าเสีย ผลผลิตตกต่ำ อัตราเงินเฟ้อขึ้นสูง ตลาดหุ้นผันผวน",
-    effects: { stocks: -0.10, bank: 0.02, realEstate: -0.05 }
+    effects: { stocks: -0.02, bank: 0.02, realEstate: -0.05 }
   },
   {
     id: 85,
     theme: "disaster",
     title: "วิกฤตหมอกควันไฟป่าคลุมทั้งเมือง",
     description: "ควันไฟป่าทำให้หน้าร้านค้าเงียบเหงา ไม่มีคนออกมาเดินช้อปปิ้ง อสังหาฯ และหุ้นห้างสรรพสินค้าแย่",
-    effects: { realEstate: -0.12, stocks: -0.07 }
+    effects: { realEstate: -0.12, stocks: -0.01 }
   },
   {
     id: 86,
     theme: "disaster",
     title: "ฝนตกหนักห้าสิบวันห้าสิบคืน",
     description: "ฝนตกไม่หยุดทำให้เกิดความเสียหายทางโครงสร้างพื้นฐาน ถนนพัง รัฐบาลต้องออกงบฉุกเฉิน พันธบัตรร่วงเล็กน้อย",
-    effects: { realEstate: -0.15, govBonds: -0.03, stocks: -0.09 }
+    effects: { realEstate: -0.15, govBonds: -0.03, stocks: -0.02 }
   },
   {
     id: 87,
     theme: "disaster",
     title: "พายุสุริยะพัดผ่านโลก ระบบไฟขัดข้อง",
     description: "เกิดกระแสไฟกระชากทำลายอุปกรณ์ไอที บิตคอยน์เทรดไม่ได้ชั่วคราวและร่วงหนัก หุ้นอิเล็กทรอนิกส์ร่วงยับ",
-    effects: { bitcoin: -0.50, stocks: -0.25, gold: 0.20, bank: -0.04 }
+    effects: { bitcoin: -0.50, stocks: -0.15, gold: 0.20, bank: -0.04 }
   },
   {
     id: 88,
     theme: "disaster",
     title: "พายุกรดซัลเฟอร์ตกใส่ตึก",
     description: "ฝนกรดทำลายสีอาคารและกระจกนอกตึก เจ้าของอสังหาฯ ต้องควักเงินซ่อมแซมทาสีใหม่ยกใหญ่",
-    effects: { realEstate: -0.18, stocks: -0.04 }
+    effects: { realEstate: -0.18, stocks: 0.01 }
   },
   {
     id: 89,
     theme: "disaster",
     title: "ภัยแล้งยาวนานที่สุดในรอบศตวรรษ",
     description: "น้ำในเขื่อนแห้งขอด ขาดแคลนน้ำใช้ในอุตสาหกรรม โรงงานผลิตสินค้าไม่ได้ หุ้นร่วงเกือบทุกกลุ่ม",
-    effects: { stocks: -0.16, corpBonds: -0.05, bank: 0.01 }
+    effects: { stocks: -0.08, corpBonds: -0.05, bank: 0.01 }
   },
   {
     id: 90,
     theme: "disaster",
     title: "อุทกภัยดินถล่มทับเมืองท่องเที่ยว",
     description: "แหล่งท่องเที่ยวทางธรรมชาติพังเสียหาย โรงแรมโดนโคลนถล่มทับ อสังหาฯ ท่องเที่ยวซบเซาหนัก",
-    effects: { realEstate: -0.25, stocks: -0.12 }
+    effects: { realEstate: -0.25, stocks: -0.04 }
   },
 
   // ==================== THEME 10: เหตุการณ์สุดเพี้ยน/ตลก (funny) ====================
@@ -715,14 +715,14 @@ const events = [
     theme: "funny",
     title: "รัฐบาลประกาศวันหยุดราชการ 30 วันติดต่อกัน",
     description: "ทุกคนหยุดพักผ่อนนอนหลับ ธุรกิจหยุดชะงัก หุ้นและอสังหาฯ ขาดรายได้ แต่ค่าความบันเทิงสูงขึ้น",
-    effects: { stocks: -0.15, realEstate: -0.10, bank: -0.02 }
+    effects: { stocks: -0.06, realEstate: -0.10, bank: -0.02 }
   },
   {
     id: 99,
     theme: "funny",
     title: "แมวส้มบุกยึดเซิร์ฟเวอร์ตลาดหลักทรัพย์",
     description: "แมวส้มเดินเหยียบแป้นพิมพ์ทำให้ระบบจับคู่หุ้นเพี้ยน สุ่มซื้อขายหุ้นมั่วซั่ว หุ้นบางตัวพุ่งบางตัวตก ตลาดป่วนหนัก",
-    effects: { stocks: -0.05, bitcoin: 0.15, gold: 0.05 }
+    effects: { stocks: 0.00, bitcoin: 0.15, gold: 0.05 }
   },
   {
     id: 100,
