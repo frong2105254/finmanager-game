@@ -710,12 +710,12 @@ body::after {
 
 .cutscene-title {
   color: var(--neon-yellow);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   margin-bottom: 12px;
 }
 
 .cutscene-desc {
-  font-size: 1rem;
+  font-size: 1.15rem;
   line-height: 1.5;
   color: #fff;
   margin-bottom: 20px;
@@ -731,14 +731,14 @@ body::after {
 }
 
 .cutscene-effect-title {
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: var(--neon-magenta);
   font-family: var(--font-retro);
   margin-bottom: 5px;
 }
 
 .cutscene-effect-list {
-  font-size: 0.85rem;
+  font-size: 1rem;
   list-style: none;
 }
 
