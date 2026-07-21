@@ -713,8 +713,6 @@ function setupSocketListeners() {
       document.getElementById('my-status-val').className = 'stat-value status';
       disableAllocationForm(false);
       
-      // แสดงเปอร์เซ็นต์กำไร/ขาดทุนต่อท้ายชื่อสินทรัพย์ (ระบบ Double-bulletproof)
-      const debugEl = document.getElementById('client-debug-box');
       try {
         const lastHist = (me && me.history && me.history.length > 0) ? me.history[me.history.length - 1] : null;
         const postAlloc = lastHist ? lastHist.allocation : null;
@@ -725,12 +723,6 @@ function setupSocketListeners() {
           preAlloc = myLastAllocation;
         } else if (lastHist && lastHist.preAllocation) {
           preAlloc = lastHist.preAllocation;
-        }
-
-        if (debugEl) {
-          // โชว์ดีบั๊กเพื่อตรวจสอบค่าจริงๆ ที่วิ่งอยู่บนบราวเซอร์
-          debugEl.style.display = 'block';
-          debugEl.innerHTML = `[DIAGNOSTICS] me: ${!!me} | hist_len: ${me?.history?.length || 0} | preAlloc: ${JSON.stringify(preAlloc)} | myLastAlloc: ${JSON.stringify(myLastAllocation)}`;
         }
 
         const BASE_RETURNS = {
@@ -775,10 +767,7 @@ function setupSocketListeners() {
           });
         }
       } catch (err) {
-        if (debugEl) {
-          debugEl.style.display = 'block';
-          debugEl.innerHTML = `[ERROR] ${err.message}\nStack: ${err.stack}`;
-        }
+        console.error('Failed to resolve percentages', err);
       }
 
       // โหลดเงินลงทุนตามมูลค่าจริงหลังผ่านอีเวนต์ โดยไม่ต้องรีเซ็ตกลับหน้าแรก
