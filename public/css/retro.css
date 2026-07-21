@@ -819,8 +819,9 @@ body::after {
 }
 
 .winner-info-box {
+  width: 100%;
+  box-sizing: border-box;
   padding: 25px 15px;
-  max-width: 400px;
   margin: 0 auto 30px;
   background-color: rgba(0,0,0,0.5);
   display: flex;

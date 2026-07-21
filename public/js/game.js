@@ -750,13 +750,7 @@ function setupSocketListeners() {
               const oldVal = preAlloc[k] || 0;
               const newVal = postAlloc ? (postAlloc[k] || 0) : 0;
               if (oldVal > 0) {
-                let pct = 0;
-                if (k === 'artToys') {
-                  pct = ((newVal - oldVal) / oldVal) * 100;
-                } else {
-                  let yieldVal = (event && event.effects && event.effects[k] !== undefined) ? event.effects[k] : BASE_RETURNS[k];
-                  pct = yieldVal * 100;
-                }
+                let pct = ((newVal - oldVal) / oldVal) * 100;
                 let color = pct > 0 ? 'var(--neon-green)' : (pct < 0 ? 'var(--neon-red)' : '#888');
                 let sign = pct > 0 ? '+' : '';
                 nameEl.innerHTML = `${baseText} <span style="color: ${color}; font-size: 0.75rem; margin-left: 5px;">${sign}${pct.toFixed(1)}%</span>`;
