@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8-Bit FinManager - เกมบริหารเงินสุดปั่น</title>
   <!-- CSS สไตล์เรโทร -->
-  <link rel="stylesheet" href="css/retro.css?v=4">
+  <link rel="stylesheet" href="css/retro.css?v=5">
   <!-- นำเข้า Socket.IO Client จาก CDN เพื่อให้โฮสต์หน้าบ้านแบบเสรีข้ามโดเมนได้เสถียร -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
@@ -525,8 +525,8 @@
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🪙 ทองคำ</td>
-                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+1.0%</td>
-                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ, ภัยพิบัติธรรมชาติ, และเงินเฟ้อ (+10% ถึง +25%)</b></td>
+                  <td style="padding: 6px; text-align: center; color: #8f85bd; font-weight: bold;">0.0%</td>
+                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ, ภัยพิบัติธรรมชาติ, และเงินเฟ้อ (+5% ถึง +20%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🏠 อสังหาฯ</td>
@@ -540,13 +540,13 @@
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">₿ บิตคอยน์</td>
-                  <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+5.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +150%)</b> แต่อาจร่วงยับยามเกิดวิกฤต</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-1.0%</td>
+                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +150%)</b> แต่ดีฟอลต์ราคาจะซึมลงหากไม่มีข่าวดี</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🧸 อาร์ตทอยส์</td>
-                  <td style="padding: 6px; text-align: center; color: #8f85bd;">สุ่มตามกระแส</td>
-                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +200% ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ราคาจะร่วงเกือบเป็น 0 (-95%) ยามวิกฤต/โรคระบาด</td>
+                  <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-5.0%</td>
+                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +200% ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ดีฟอลต์ราคาจะลดลงหากไม่มีกระแสความนิยมปั่นราคา</td>
                 </tr>
               </tbody>
             </table>
@@ -602,6 +602,6 @@
 
   <!-- นำเข้าสคริปต์ Frontend -->
   <script src="js/audio.js"></script>
-  <script src="js/game.js?v=4"></script>
+  <script src="js/game.js?v=5"></script>
 </body>
 </html>
