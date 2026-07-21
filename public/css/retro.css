@@ -768,6 +768,7 @@ body::after {
   z-index: 10000;
   display: block; /* แก้ไขปัญหาการบล็อกสกรอลล์บน iOS */
   overflow-y: auto;
+  overflow-x: hidden; /* ป้องกันการเลื่อนซ้ายขวาอย่างเด็ดขาด */
   -webkit-overflow-scrolling: touch;
   padding: 30px 10px;
   opacity: 0;
@@ -787,8 +788,7 @@ body::after {
   padding: 30px 20px;
   margin: 0 auto;
   position: relative;
-  max-height: 85vh;
-  overflow-y: auto;
+  /* นำ max-height และ overflow-y ออกเพื่อแก้ปัญหา Scroll ซ้อนกันที่อาจทำให้เกิดอาการดิ้นซ้ายขวา */
   display: flex;
   flex-direction: column;
 }
