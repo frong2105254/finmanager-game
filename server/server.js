@@ -11,7 +11,9 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
-  }
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 const PORT = process.env.PORT || 3000;
@@ -96,6 +98,12 @@ io.on('connection', (socket) => {
       if (existingPlayer.isConnected) {
         socket.emit('errorMsg', 'ชื่อผู้เล่นนี้กำลังเชื่อมต่อและเล่นอยู่ในห้องนี้');
         return;
+      }
+
+      // ล้างไทม์เมอร์ตัดการเชื่อมต่อชั่วคราวออก
+      if (existingPlayer.disconnectTimer) {
+        clearTimeout(existingPlayer.disconnectTimer);
+        existingPlayer.disconnectTimer = null;
       }
 
       // เปลี่ยนข้อมูล Socket ID และสถานะการเชื่อมต่อใหม่
@@ -338,22 +346,24 @@ io.on('connection', (socket) => {
           // หากกำลังเล่นเกมหรือจบเกมอยู่ ให้ทำเครื่องหมายว่า Disconnected
           player.isConnected = false;
           
-          // ถ้าหลุดออกจากห้องระหว่างที่เกมยังไม่จบ (status === 'playing') ให้ปรับเป็นล้มละลายทันที!
+          // ถ้าหลุดออกจากห้องระหว่างที่เกมยังไม่จบ (status === 'playing') ให้ตั้งเวลาปรับล้มละลายหลัง 60 วินาที (เพื่อให้มีโอกาส Reconnect)
           if (room.status === 'playing') {
-            player.isBankrupt = true;
-            player.money = 0;
-            player.allocation = {
-              bank: 0,
-              govBonds: 0,
-              corpBonds: 0,
-              gold: 0,
-              realEstate: 0,
-              stocks: 0,
-              bitcoin: 0,
-              insurance: 0,
-              artToys: 0,
-              cash: 0
-            };
+            if (player.disconnectTimer) {
+              clearTimeout(player.disconnectTimer);
+            }
+            player.disconnectTimer = setTimeout(() => {
+              if (!player.isConnected && room.status === 'playing') {
+                player.isBankrupt = true;
+                player.money = 0;
+                player.allocation = {
+                  bank: 0, govBonds: 0, corpBonds: 0, gold: 0, realEstate: 0,
+                  stocks: 0, bitcoin: 0, insurance: 0, artToys: 0, cash: 0
+                };
+                console.log(`Grace period expired. Player ${player.name} is now bankrupt.`);
+                checkAndResolveRound(room);
+                io.to(code).emit('lobbyUpdate', getCleanRoomState(room));
+              }
+            }, 60000); // รอ 60 วินาที
           }
           
           // ถ้าโฮสต์หลุดและยังมีผู้เล่นที่เชื่อมต่อเหลืออยู่ ให้แต่งตั้งโฮสต์คนใหม่จากผู้ที่ยังเชื่อมต่ออยู่
@@ -370,7 +380,7 @@ io.on('connection', (socket) => {
           // ตรวจสอบการผ่านรอบทันที เผื่อคนสุดท้ายที่รอส่งดันหลุดไป
           checkAndResolveRound(room);
           io.to(code).emit('playerDisconnected', { playerId: player.id, name: player.name });
-          io.to(code).emit('lobbyUpdate', getCleanRoomState(room)); // อัปเดตห้องเพื่อให้ทุกคนรับรู้โฮสต์คนใหม่
+          io.to(code).emit('lobbyUpdate', getCleanRoomState(room)); // อัปเดตห้องเพื่อให้ทุกคนรับรู้สถานะการหลุดชั่วคราว
         }
         
         // ลบห้องทิ้งหากไม่เหลือผู้เล่นเชื่อมต่ออยู่เลย
