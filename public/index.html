@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8-Bit FinManager - เกมบริหารเงินสุดปั่น</title>
   <!-- CSS สไตล์เรโทร -->
-  <link rel="stylesheet" href="css/retro.css?v=5">
+  <link rel="stylesheet" href="css/retro.css?v=6">
   <!-- นำเข้า Socket.IO Client จาก CDN เพื่อให้โฮสต์หน้าบ้านแบบเสรีข้ามโดเมนได้เสถียร -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
@@ -526,12 +526,12 @@
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🪙 ทองคำ</td>
                   <td style="padding: 6px; text-align: center; color: #8f85bd; font-weight: bold;">0.0%</td>
-                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ, ภัยพิบัติธรรมชาติ, และเงินเฟ้อ (+5% ถึง +20%)</b></td>
+                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ หรือตลาดหมี (+5% ถึง +18%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🏠 อสังหาฯ</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+4.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">ได้รับค่าเช่าสม่ำเสมอ แต่อาจขาดทุนหนักหากเกิด <b>ภัยพิบัติ (น้ำท่วม/ไฟไหม้) หรือตลาดหมี (-10% ถึง -15%)</b></td>
+                  <td style="padding: 6px; color: var(--neon-red);">ได้รับค่าเช่าสม่ำเสมอ แต่อาจขาดทุนหนักหากเกิด <b>ภัยพิบัติ (น้ำท่วม/ไฟไหม้) หรือตลาดหมี (-10% ถึง -30%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">📈 หุ้นสามัญ</td>
@@ -541,12 +541,12 @@
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">₿ บิตคอยน์</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-1.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +150%)</b> แต่ดีฟอลต์ราคาจะซึมลงหากไม่มีข่าวดี</td>
+                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +200%)</b> แต่อาจร่วงยับยามวิกฤต/คริปโตดิ่ง (-40% ถึง -70%) และดีฟอลต์ราคาจะซึมลงหากไม่มีข่าวดี</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🧸 อาร์ตทอยส์</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-5.0%</td>
-                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +200% ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ดีฟอลต์ราคาจะลดลงหากไม่มีกระแสความนิยมปั่นราคา</td>
+                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +120% (หรือแจ็กพอต +500%) ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ดีฟอลต์ราคาจะลดลงหากไม่มีกระแสความนิยมปั่นราคา</td>
                 </tr>
               </tbody>
             </table>
@@ -554,7 +554,10 @@
 
           <!-- ข้อมูลประกันสุขภาพ -->
           <div style="border: 2px dashed var(--neon-green); padding: 12px; border-radius: 4px; background-color: #0b2210; margin-bottom: 20px; text-align: left;">
-            <h4 class="retro-font" style="font-size: 0.7rem; color: var(--neon-green); margin-bottom: 8px;">🏥 คู่มือประกันสุขภาพ (Health Insurance)</h4>
+            <h4 class="retro-font" style="font-size: 0.7rem; color: #fff; margin-bottom: 8px; line-height: 1.35;">
+              🏥 คู่มือประกันสุขภาพ<br>
+              <span style="font-size: 0.55rem; color: #aaa;">(Health Insurance)</span>
+            </h4>
             <ul style="padding-left: 15px; font-size: 0.75rem; margin: 0; color: #ddd; display: flex; flex-direction: column; gap: 5px;">
               <li>เบี้ยประกันเป็น <b>เบี้ยเสียทิ้งรายรอบ</b> (ไม่ได้สะสมเป็นเงินเก็บ และหมดอายุทุกรอบที่จบลง)</li>
               <li><b>ประกันคุ้มครองเต็มรูปแบบ (จ่ายเบี้ย 20,000 ฿ ขึ้นไป)</b>: 
@@ -602,6 +605,6 @@
 
   <!-- นำเข้าสคริปต์ Frontend -->
   <script src="js/audio.js"></script>
-  <script src="js/game.js?v=5"></script>
+  <script src="js/game.js?v=6"></script>
 </body>
 </html>
