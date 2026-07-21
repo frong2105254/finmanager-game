@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8-Bit FinManager - เกมบริหารเงินสุดปั่น</title>
   <!-- CSS สไตล์เรโทร -->
-  <link rel="stylesheet" href="css/retro.css?v=6">
+  <link rel="stylesheet" href="css/retro.css?v=7">
   <!-- นำเข้า Socket.IO Client จาก CDN เพื่อให้โฮสต์หน้าบ้านแบบเสรีข้ามโดเมนได้เสถียร -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
@@ -499,54 +499,54 @@
           
           <!-- ตารางสรุปสินทรัพย์ -->
           <div style="overflow-x: auto; margin-bottom: 20px;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
+            <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
               <thead>
                 <tr style="border-bottom: 2px solid var(--border-color); color: var(--neon-cyan);">
-                  <th style="padding: 6px; font-weight: bold;">สินทรัพย์</th>
-                  <th style="padding: 6px; text-align: center; font-weight: bold;">ปันผลต่อรอบ</th>
-                  <th style="padding: 6px; font-weight: bold;">ความเสี่ยงยามเกิดวิกฤต / สรุปพฤติกรรม</th>
+                  <th style="padding: 6px; font-weight: bold; width: 22%;">สินทรัพย์</th>
+                  <th style="padding: 6px; text-align: center; font-weight: bold; width: 18%;">ปันผลต่อรอบ</th>
+                  <th style="padding: 6px; font-weight: bold; width: 60%;">ความเสี่ยงยามเกิดวิกฤต / สรุปพฤติกรรม</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🏦 เงินฝาก</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+0.5%</td>
-                  <td style="padding: 6px; color: #aaa;">ไม่มีความเสี่ยงสูญเงินต้น ปลอดภัยที่สุด แต่อาจสู้เงินเฟ้อได้ยาก</td>
+                  <td style="padding: 6px; color: #aaa;">ไม่มีความเสี่ยง&#8203;สูญเงินต้น&#8203; ปลอดภัยที่สุด&#8203; แต่อาจสู้&#8203;เงินเฟ้อ&#8203;ได้ยาก</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">📜 พันธบัตรรัฐ</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+1.5%</td>
-                  <td style="padding: 6px; color: #aaa;">ความมั่นคงสูงมาก ได้รับผลตอบแทนสม่ำเสมอในรอบวิกฤตและโรคระบาด</td>
+                  <td style="padding: 6px; color: #aaa;">ความมั่นคง&#8203;สูงมาก&#8203; ได้รับผลตอบแทน&#8203;สม่ำเสมอ&#8203;ในรอบวิกฤต&#8203;และโรคระบาด</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🏢 หุ้นกู้เอกชน</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+2.0%</td>
-                  <td style="padding: 6px; color: #aaa;">ผลตอบแทนดีกว่ารัฐบาลเล็กน้อย เสี่ยงปานกลางหากเกิดวิกฤตหุ้นตก</td>
+                  <td style="padding: 6px; color: #aaa;">ผลตอบแทน&#8203;ดีกว่ารัฐบาล&#8203;เล็กน้อย&#8203; เสี่ยงปานกลาง&#8203;หากเกิด&#8203;วิกฤตหุ้นตก</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🪙 ทองคำ</td>
                   <td style="padding: 6px; text-align: center; color: #8f85bd; font-weight: bold;">0.0%</td>
-                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัยชั้นยอด! จะราคาพุ่งแรงสวนตลาดเมื่อเกิด <b>วิกฤตเศรษฐกิจ หรือตลาดหมี (+5% ถึง +18%)</b></td>
+                  <td style="padding: 6px; color: var(--neon-cyan);">เป็นหลุมหลบภัย&#8203;ชั้นยอด!&#8203; จะราคาพุ่งแรง&#8203;สวนตลาด&#8203;เมื่อเกิด <b>วิกฤตเศรษฐกิจ&#8203; หรือตลาดหมี&#8203; (+5% ถึง +18%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🏠 อสังหาฯ</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+4.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">ได้รับค่าเช่าสม่ำเสมอ แต่อาจขาดทุนหนักหากเกิด <b>ภัยพิบัติ (น้ำท่วม/ไฟไหม้) หรือตลาดหมี (-10% ถึง -30%)</b></td>
+                  <td style="padding: 6px; color: var(--neon-red);">ได้รับค่าเช่า&#8203;สม่ำเสมอ&#8203; แต่อาจขาดทุน&#8203;หนักหากเกิด <b>ภัยพิบัติ&#8203; (น้ำท่วม/ไฟไหม้)&#8203; หรือตลาดหมี&#8203; (-10% ถึง -30%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">📈 หุ้นสามัญ</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-green); font-weight: bold;">+3.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">เติบโตดีตามรอบเศรษฐกิจ แต่ราคาจะตกหนักเมื่อเกิด <b>โรคระบาด วิกฤตเศรษฐกิจ หรือเงินเฟ้อ (-15% ถึง -20%)</b></td>
+                  <td style="padding: 6px; color: var(--neon-red);">เติบโตดี&#8203;ตามรอบเศรษฐกิจ&#8203; แต่ราคาจะตกหนัก&#8203;เมื่อเกิด <b>โรคระบาด&#8203; วิกฤตเศรษฐกิจ&#8203; หรือเงินเฟ้อ&#8203; (-15% ถึง -20%)</b></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">₿ บิตคอยน์</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-1.0%</td>
-                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด ราคาพุ่งแรงใน <b>ตลาดกระทิง/คริปโตบูม (+50% ถึง +200%)</b> แต่อาจร่วงยับยามวิกฤต/คริปโตดิ่ง (-40% ถึง -70%) และดีฟอลต์ราคาจะซึมลงหากไม่มีข่าวดี</td>
+                  <td style="padding: 6px; color: var(--neon-red);">ผันผวนสุดขีด&#8203; ราคาพุ่งแรง&#8203;ใน <b>ตลาดกระทิง/&#8203;คริปโตบูม&#8203; (+50% ถึง +200%)</b> แต่อาจร่วงยับ&#8203;ยามวิกฤต/&#8203;คริปโตดิ่ง&#8203; (-40% ถึง -70%)&#8203; และดีฟอลต์ราคา&#8203;จะซึมลง&#8203;หากไม่มีข่าวดี</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #221d45;">
                   <td style="padding: 6px; font-weight: bold;">🧸 อาร์ตทอยส์</td>
                   <td style="padding: 6px; text-align: center; color: var(--neon-red); font-weight: bold;">-5.0%</td>
-                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไรตามเทรน <b>กำไรพุ่งมหาศาลสูงถึง +120% (หรือแจ็กพอต +500%) ในช่วงตลาดกระทิง/คริปโตบูม</b> แต่ดีฟอลต์ราคาจะลดลงหากไม่มีกระแสความนิยมปั่นราคา</td>
+                  <td style="padding: 6px; color: var(--neon-magenta);">สินค้าเก็งกำไร&#8203;ตามเทรน&#8203; <b>กำไรพุ่งมหาศาล&#8203;สูงถึง +120%&#8203; (หรือแจ็กพอต +500%)&#8203; ในช่วงตลาดกระทิง/&#8203;คริปโตบูม</b> แต่ดีฟอลต์ราคา&#8203;จะลดลง&#8203;หากไม่มีกระแส&#8203;ความนิยมปั่นราคา</td>
                 </tr>
               </tbody>
             </table>
@@ -554,9 +554,9 @@
 
           <!-- ข้อมูลประกันสุขภาพ -->
           <div style="border: 2px dashed var(--neon-green); padding: 12px; border-radius: 4px; background-color: #0b2210; margin-bottom: 20px; text-align: left;">
-            <h4 class="retro-font" style="font-size: 0.7rem; color: #fff; margin-bottom: 8px; line-height: 1.35;">
+            <h4 class="retro-font" style="font-size: 0.95rem; color: #fff; margin-bottom: 8px; line-height: 1.35; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
               🏥 คู่มือประกันสุขภาพ<br>
-              <span style="font-size: 0.55rem; color: #aaa;">(Health Insurance)</span>
+              <span style="font-size: 0.65rem; color: #aaa; font-family: var(--font-thai); font-weight: normal;">(Health Insurance)</span>
             </h4>
             <ul style="padding-left: 15px; font-size: 0.75rem; margin: 0; color: #ddd; display: flex; flex-direction: column; gap: 5px;">
               <li>เบี้ยประกันเป็น <b>เบี้ยเสียทิ้งรายรอบ</b> (ไม่ได้สะสมเป็นเงินเก็บ และหมดอายุทุกรอบที่จบลง)</li>
@@ -605,6 +605,6 @@
 
   <!-- นำเข้าสคริปต์ Frontend -->
   <script src="js/audio.js"></script>
-  <script src="js/game.js?v=6"></script>
+  <script src="js/game.js?v=7"></script>
 </body>
 </html>
