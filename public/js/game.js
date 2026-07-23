@@ -1354,6 +1354,11 @@ function showWinnerCeremony(roomState) {
   // บันทึกสถานะห้องปัจจุบัน
   currentRoomState = roomState;
   
+  // ร้องขอข้อมูล Hall of Fame ล่าสุดจากเซิร์ฟเวอร์
+  if (typeof socket !== 'undefined' && socket) {
+    socket.emit('getHighScores');
+  }
+
   // เล่นเสียงผู้ชนะ
   window.audio.playWin();
 

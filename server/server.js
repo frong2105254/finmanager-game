@@ -91,14 +91,15 @@ function updateHighScoresForFinishedRoom(room) {
   let updated = false;
   room.players.forEach(p => {
     if (!p.isBankrupt && p.money > 0) {
-      const parts = p.name.trim().split(' ');
+      const trimmed = (p.name || '').trim();
+      const firstSpaceIdx = trimmed.indexOf(' ');
       let avatar = '👾';
-      let name = p.name;
-      if (parts.length > 1) {
-        avatar = parts[0];
-        name = parts.slice(1).join(' ');
+      let name = trimmed;
+      if (firstSpaceIdx !== -1) {
+        avatar = trimmed.substring(0, firstSpaceIdx);
+        name = trimmed.substring(firstSpaceIdx + 1).trim();
       }
-      
+
       const existingIdx = highScores[diffKey].findIndex(h => h.name.toLowerCase() === name.toLowerCase());
       if (existingIdx !== -1) {
         if (p.money > highScores[diffKey][existingIdx].money) {
@@ -112,12 +113,14 @@ function updateHighScoresForFinishedRoom(room) {
     }
   });
 
+  highScores[diffKey].sort((a, b) => b.money - a.money);
+  highScores[diffKey] = highScores[diffKey].slice(0, 5);
+
   if (updated) {
-    highScores[diffKey].sort((a, b) => b.money - a.money);
-    highScores[diffKey] = highScores[diffKey].slice(0, 5);
     saveHighScores();
-    io.emit('highScoresUpdate', highScores);
   }
+
+  io.emit('highScoresUpdate', highScores);
 }
 
 // ฟังก์ชันสร้าง Room Code แบบสุ่ม 4 ตัวอักษรภาษาอังกฤษพิมพ์ใหญ่
