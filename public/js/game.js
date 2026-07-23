@@ -600,7 +600,7 @@ function submitMyAllocation() {
   });
 
   // ตรวจสอบขั้นสูงสุดอีกครั้ง ป้องกันการแฮกหรือพิมพ์ไว
-  if (totalAllocated > myState.money) {
+  if (Math.round(totalAllocated) > Math.round(myState.money + 0.5)) {
     alert(`ไม่สามารถจัดสรรเงินลงทุนรวม (${totalAllocated.toLocaleString()} บาท) เกินกว่ายอดเงินทุนสุทธิของคุณ (${myState.money.toLocaleString()} บาท) ได้!`);
     return;
   }
