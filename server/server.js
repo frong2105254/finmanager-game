@@ -5,7 +5,14 @@ const { Server } = require('socket.io');
 const path = require('path');
 const fs = require('fs');
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
-let highScores = { easy: [], medium: [], hard: [] };
+// ป้องกันเซิร์ฟเวอร์ล่มจาก Uncaught Error
+process.on('uncaughtException', (err) => {
+  console.error('CRITICAL: Uncaught Exception caught:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('CRITICAL: Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 const app = express();
 const server = http.createServer(app);
