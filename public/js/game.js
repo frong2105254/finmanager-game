@@ -19,6 +19,9 @@ socket.on('connect', () => {
       roomCode: myState.roomCode,
       playerName: `${myState.avatar} ${myState.name}`
     });
+    if (myState.hasSubmitted && myLastAllocation) {
+      socket.emit('submitAllocation', myLastAllocation);
+    }
   }
 });
 
@@ -677,6 +680,17 @@ function setupSocketListeners() {
     const me = roomState.players.find(p => p.id === myState.id);
     if (me) {
       myState.isHost = me.isHost;
+      
+      // ซิงค์สถานะการส่งเงินกับเซิร์ฟเวอร์ หากเซิร์ฟเวอร์แจ้งว่ายังไม่ได้ส่งแต่เครื่องเราคิดว่าส่งแล้ว ให้ส่งซ้ำทันที
+      if (!me.hasSubmitted && myState.hasSubmitted && roomState.status === 'playing') {
+        if (myLastAllocation) {
+          socket.emit('submitAllocation', myLastAllocation);
+        } else {
+          myState.hasSubmitted = false;
+          disableAllocationForm(false);
+          document.getElementById('my-status-val').innerText = 'กำลังวางแผน...';
+        }
+      }
     }
 
     if (roomState.status === 'playing') {
