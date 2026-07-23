@@ -579,6 +579,11 @@ function fetchHighScores() {
     window.audio.playClick();
     document.getElementById('cutscene-overlay').classList.remove('show');
     setBodyScroll(true);
+
+    // หากเป็นรอบสุดท้ายที่เกมจบแล้ว ให้เปิดหน้าสรุปผลผู้ชนะทันทีเมื่อผู้เล่นกดรับทราบ
+    if (currentRoomState && currentRoomState.status === 'finished') {
+      showWinnerCeremony(currentRoomState);
+    }
   });
 }
 
@@ -908,11 +913,13 @@ function setupSocketListeners() {
       loadAllocationToSliders(me.allocation);
     }
 
-    // หากเกมจบแล้ว แสดงผลผู้ชนะท้ายเกมหลังจากดู cutscene เสร็จสิ้น
+    // หากเกมจบแล้ว แสดงผลผู้ชนะท้ายเกมหลังจากดู cutscene เสร็จสิ้น (หรือเมื่อผู้เล่นกดปุ่มรับทราบ)
     if (roomState.status === 'finished') {
       setTimeout(() => {
-        showWinnerCeremony(roomState);
-      }, 5000); // ดีเลย์แสดงผู้ชนะ 5 วินาทีเพื่อให้ดูคัทซีนรอบสุดท้ายก่อน
+        if (currentRoomState && currentRoomState.status === 'finished') {
+          showWinnerCeremony(currentRoomState);
+        }
+      }, 2500);
     }
   });
 
@@ -1158,6 +1165,18 @@ function triggerCutscene(event, myPlayerData) {
       window.audio.playBankruptcy();
     } else if (change > 0) {
       window.audio.playCashRegister();
+    }
+  }
+
+  // หากเป็นรอบสุดท้ายที่เกมจบแล้ว ปรับเปลี่ยนข้อความปุ่มปิดให้เป็นปุ่มเข้าสู่หน้าชนะ
+  const btnCloseCutscene = document.getElementById('btn-close-cutscene');
+  if (btnCloseCutscene) {
+    if (currentRoomState && currentRoomState.status === 'finished') {
+      btnCloseCutscene.className = 'pixel-btn pixel-btn-green';
+      btnCloseCutscene.innerHTML = '🏆 ดูสรุปผลผู้ชนะ! <span style="font-family: var(--font-retro); font-size: 0.55rem; display: block; margin-top: 4px; font-weight: normal; letter-spacing: 0.5px;">(SEE WINNER)</span>';
+    } else {
+      btnCloseCutscene.className = 'pixel-btn pixel-btn-cyan';
+      btnCloseCutscene.innerHTML = 'รับทราบ <span style="font-family: var(--font-retro); font-size: 0.55rem; display: block; margin-top: 4px; font-weight: normal; letter-spacing: 0.5px;">(CLOSE)</span>';
     }
   }
 
