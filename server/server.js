@@ -30,6 +30,72 @@ app.get('/', (req, res) => {
 // โครงสร้าง: rooms[roomCode] = { id, players, difficulty, maxRounds, currentRound, status, eventsLog }
 const rooms = {};
 
+const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
+let highScores = { easy: [], medium: [], hard: [] };
+
+function loadHighScores() {
+  try {
+    if (fs.existsSync(HIGHSCORES_FILE)) {
+      const data = fs.readFileSync(HIGHSCORES_FILE, 'utf8');
+      highScores = JSON.parse(data);
+      if (!highScores.easy) highScores.easy = [];
+      if (!highScores.medium) highScores.medium = [];
+      if (!highScores.hard) highScores.hard = [];
+    }
+  } catch (err) {
+    console.error('Failed to load highscores:', err);
+    highScores = { easy: [], medium: [], hard: [] };
+  }
+}
+
+function saveHighScores() {
+  try {
+    fs.writeFileSync(HIGHSCORES_FILE, JSON.stringify(highScores, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save highscores:', err);
+  }
+}
+
+loadHighScores();
+
+function updateHighScoresForFinishedRoom(room) {
+  const diffKey = room.difficulty || 'easy';
+  if (!highScores[diffKey]) {
+    highScores[diffKey] = [];
+  }
+
+  let updated = false;
+  room.players.forEach(p => {
+    if (!p.isBankrupt && p.money > 0) {
+      const parts = p.name.trim().split(' ');
+      let avatar = '👾';
+      let name = p.name;
+      if (parts.length > 1) {
+        avatar = parts[0];
+        name = parts.slice(1).join(' ');
+      }
+      
+      const existingIdx = highScores[diffKey].findIndex(h => h.name.toLowerCase() === name.toLowerCase());
+      if (existingIdx !== -1) {
+        if (p.money > highScores[diffKey][existingIdx].money) {
+          highScores[diffKey][existingIdx] = { avatar, name, money: p.money };
+          updated = true;
+        }
+      } else {
+        highScores[diffKey].push({ avatar, name, money: p.money });
+        updated = true;
+      }
+    }
+  });
+
+  if (updated) {
+    highScores[diffKey].sort((a, b) => b.money - a.money);
+    highScores[diffKey] = highScores[diffKey].slice(0, 5);
+    saveHighScores();
+    io.emit('highScoresUpdate', highScores);
+  }
+}
+
 // ฟังก์ชันสร้าง Room Code แบบสุ่ม 4 ตัวอักษรภาษาอังกฤษพิมพ์ใหญ่
 function generateRoomCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -759,6 +825,7 @@ function resolveRound(room) {
   
   if (room.currentRound >= room.maxRounds || activeCount === 0 || (room.players.length > 1 && activeCount === 1)) {
     room.status = 'finished';
+    updateHighScoresForFinishedRoom(room);
   }
 
   // ส่งผลการประมวลผลรอบเล่นไปให้ทุกคนในห้อง

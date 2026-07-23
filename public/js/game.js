@@ -361,6 +361,106 @@ function bindButtons() {
     setBodyScroll(true);
   });
 
+  // ช่วยแปลงอักขระพิเศษสำหรับแสดงผลใน HTML อย่างปลอดภัย
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  let globalHighScores = { easy: [], medium: [], hard: [] };
+  let currentLeaderboardDiff = 'easy';
+
+  function renderLeaderboardModal() {
+    const listContainer = document.getElementById('leaderboard-modal-list');
+    if (!listContainer) return;
+    const scores = globalHighScores[currentLeaderboardDiff] || [];
+    if (scores.length === 0) {
+      listContainer.innerHTML = `
+        <div style="text-align: center; padding: 30px 10px; color: #888; font-family: var(--font-thai); font-size: 0.85rem;">
+          ยังไม่มีผู้ทำสถิติในระดับความยากนี้<br>
+          <span style="font-size: 0.7rem; color: #555;">เป็นคนแรกที่สร้างประวัติศาสตร์เลย!</span>
+        </div>
+      `;
+      return;
+    }
+    let html = '';
+    scores.forEach((item, index) => {
+      const rank = index + 1;
+      let medal = `${rank}.`;
+      let rankClass = '';
+      if (rank === 1) { medal = '🥇'; rankClass = 'rank-1'; }
+      else if (rank === 2) { medal = '🥈'; }
+      else if (rank === 3) { medal = '🥉'; }
+      
+      html += `
+        <div class="leaderboard-row ${rankClass}" style="margin-bottom: 8px; border-radius: 4px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; background-color: rgba(0,0,0,0.3);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.1rem; min-width: 25px; text-align: center;">${medal}</span>
+            <span style="font-weight: bold; font-size: 0.9rem;">${item.avatar || '👾'} ${escapeHtml(item.name || 'Anonymous')}</span>
+          </div>
+          <div style="color: var(--neon-green); font-weight: bold; font-size: 0.95rem;">
+            ฿${(item.money || 0).toLocaleString()}
+          </div>
+        </div>
+      `;
+    });
+    listContainer.innerHTML = html;
+  }
+
+  socket.on('highScoresUpdate', (data) => {
+    if (data) {
+      globalHighScores = data;
+      renderLeaderboardModal();
+    }
+  });
+
+  // ปุ่มเปิดกระดานผู้นำสูงสุด (Leaderboard)
+  const btnOpenLeaderboard = document.getElementById('btn-open-leaderboard');
+  if (btnOpenLeaderboard) {
+    btnOpenLeaderboard.addEventListener('click', () => {
+      window.audio.playClick();
+      socket.emit('getHighScores');
+      document.getElementById('leaderboard-overlay').classList.add('show');
+      setBodyScroll(false);
+      renderLeaderboardModal();
+    });
+  }
+
+  // ปุ่มปิดกระดานผู้นำสูงสุด
+  const btnCloseLeaderboard = document.getElementById('btn-close-leaderboard');
+  if (btnCloseLeaderboard) {
+    btnCloseLeaderboard.addEventListener('click', () => {
+      window.audio.playClick();
+      document.getElementById('leaderboard-overlay').classList.remove('show');
+      setBodyScroll(true);
+    });
+  }
+
+  const btnCloseLeaderboardX = document.getElementById('btn-close-leaderboard-x');
+  if (btnCloseLeaderboardX) {
+    btnCloseLeaderboardX.addEventListener('click', () => {
+      window.audio.playClick();
+      document.getElementById('leaderboard-overlay').classList.remove('show');
+      setBodyScroll(true);
+    });
+  }
+
+  // แท็บเลือกหมวดความยากในหน้าต่างกระดานผู้นำ
+  document.querySelectorAll('.leaderboard-tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      window.audio.playClick();
+      document.querySelectorAll('.leaderboard-tab-btn').forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      currentLeaderboardDiff = e.currentTarget.getAttribute('data-diff') || 'easy';
+      renderLeaderboardModal();
+    });
+  });
+
   // ปุ่มเปิดรายงานสรุปการวางแผนการเงิน
   document.getElementById('btn-show-financial-report').addEventListener('click', () => {
     window.audio.playClick();

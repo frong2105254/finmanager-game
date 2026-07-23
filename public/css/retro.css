@@ -992,6 +992,31 @@ body::after {
   to { text-shadow: 0 0 15px var(--neon-green); }
 }
 
+/* แท็บเปลี่ยนหมวดความยากในหน้าต่างกระดานผู้นำ */
+.leaderboard-tab-btn {
+  font-family: var(--font-thai);
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  background-color: #110d29;
+  border: 2px solid var(--border-color);
+  color: #aaa;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.leaderboard-tab-btn:hover {
+  border-color: var(--neon-cyan);
+  color: #fff;
+}
+
+.leaderboard-tab-btn.active {
+  background-color: var(--neon-cyan);
+  color: #000;
+  border-color: var(--neon-cyan);
+  font-weight: bold;
+}
+
 /* เอฟเฟกต์การแสดงผลตัวอักษรเริ่มเล่นเกม (START Game) */
 .start-overlay {
   position: fixed;
@@ -1009,17 +1034,20 @@ body::after {
 
 .start-text {
   font-family: var(--font-retro);
-  font-size: 6rem;
+  font-size: clamp(2.5rem, 10vw, 5rem);
   color: var(--neon-yellow);
   text-shadow: 0 0 25px var(--neon-yellow);
-  animation: startZoom 1.4s ease-out forwards;
+  animation: startZoom 1.6s ease-out forwards;
+  text-align: center;
 }
 
 @keyframes startZoom {
-  0% { transform: scale(0.2); opacity: 0; }
-  35% { transform: scale(1.2); opacity: 1; }
-  75% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
+  0% { transform: scale(3.5); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  35% { transform: scale(1.1); opacity: 1; }
+  45% { transform: scale(1); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
 }
 
 /* ==================== หน้าจอ Responsive สำหรับมือถือ ==================== */
