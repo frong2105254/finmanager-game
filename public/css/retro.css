@@ -1006,14 +1006,14 @@ body::after {
 }
 
 .leaderboard-tab-btn:hover {
-  border-color: var(--neon-cyan);
+  border-color: var(--neon-magenta);
   color: #fff;
 }
 
 .leaderboard-tab-btn.active {
-  background-color: var(--neon-cyan);
-  color: #000;
-  border-color: var(--neon-cyan);
+  background-color: var(--neon-magenta);
+  color: #fff;
+  border-color: var(--neon-magenta);
   font-weight: bold;
 }
 
