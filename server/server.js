@@ -325,15 +325,19 @@ io.on('connection', (socket) => {
       artToys: Math.max(0, parseInt(alloc.artToys) || 0)
     };
 
-    // ตรวจสอบว่าจำนวนเงินรวมในการลงทุนไม่เกินเงินที่มีอยู่จริง
-    const totalAllocated = Object.values(sanitizedAlloc).reduce((sum, val) => sum + val, 0);
-    if (totalAllocated > player.money) {
-      socket.emit('errorMsg', `จำนวนเงินลงทุนรวม (${totalAllocated.toLocaleString()} บาท) เกินกว่าเงินที่คุณมี (${player.money.toLocaleString()} บาท)`);
-      return;
+    // ปรับสัดส่วนหากเงินที่ส่งมารวมเกินเงินที่มีอยู่จริง โดยไม่ปฏิเสธการส่ง (Auto Scale Down)
+    let totalAllocated = Object.values(sanitizedAlloc).reduce((sum, val) => sum + val, 0);
+    if (totalAllocated > player.money && totalAllocated > 0) {
+      const ratio = player.money / totalAllocated;
+      totalAllocated = 0;
+      Object.keys(sanitizedAlloc).forEach(key => {
+        sanitizedAlloc[key] = Math.floor(sanitizedAlloc[key] * ratio);
+        totalAllocated += sanitizedAlloc[key];
+      });
     }
 
-    // เงินส่วนต่างที่เหลือทั้งหมดจะถูกนำไปเก็บไว้ในกองกลาง (Cash) ห้ามเด้งเข้าธนาคารโดยอัตโนมัติ
-    sanitizedAlloc.cash = player.money - totalAllocated;
+    // เงินส่วนต่างที่เหลือทั้งหมดจะถูกนำไปเก็บไว้ในกองกลาง (Cash)
+    sanitizedAlloc.cash = Math.max(0, player.money - totalAllocated);
 
     player.allocation = sanitizedAlloc;
     player.hasSubmitted = true;
@@ -505,7 +509,7 @@ function joinPlayerToRoom(socket, roomCode, playerName, isHost) {
     isBankrupt: false,
     hasSubmitted: false,
     allocation: {
-      bank: 1000000,
+      bank: 0,
       govBonds: 0,
       corpBonds: 0,
       gold: 0,
@@ -513,7 +517,8 @@ function joinPlayerToRoom(socket, roomCode, playerName, isHost) {
       stocks: 0,
       bitcoin: 0,
       insurance: 0,
-      artToys: 0
+      artToys: 0,
+      cash: 1000000
     },
     financialStats: {
       totalPremiumPaid: 0,

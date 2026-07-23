@@ -602,10 +602,18 @@ function submitMyAllocation() {
     totalAllocated += val;
   });
 
-  // ตรวจสอบขั้นสูงสุดอีกครั้ง ป้องกันการแฮกหรือพิมพ์ไว
-  if (Math.round(totalAllocated) > Math.round(myState.money + 0.5)) {
-    alert(`ไม่สามารถจัดสรรเงินลงทุนรวม (${totalAllocated.toLocaleString()} บาท) เกินกว่ายอดเงินทุนสุทธิของคุณ (${myState.money.toLocaleString()} บาท) ได้!`);
-    return;
+  // หากยอดรวมเกินเงินที่มีอยู่จริง ปรับลดลงให้พอดีทันทีโดยไม่ล็อก/บล็อกปุ่ม
+  if (totalAllocated > myState.money && totalAllocated > 0) {
+    const ratio = myState.money / totalAllocated;
+    totalAllocated = 0;
+    ASSETS.forEach(key => {
+      allocation[key] = Math.floor(allocation[key] * ratio);
+      totalAllocated += allocation[key];
+      const slider = document.getElementById(`slide-${key}`);
+      const input = document.getElementById(`input-${key}`);
+      if (slider) slider.value = allocation[key];
+      if (input) input.value = allocation[key].toLocaleString();
+    });
   }
 
   // ล็อกปุ่มกดและฟิลด์อินพุตชั่วคราวเพื่อป้องกันการกดเบิ้ล
