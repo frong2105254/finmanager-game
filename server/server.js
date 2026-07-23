@@ -4,6 +4,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const fs = require('fs');
+const events = require('./events');
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
 // ป้องกันเซิร์ฟเวอร์ล่มจาก Uncaught Error
 process.on('uncaughtException', (err) => {
