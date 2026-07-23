@@ -3,7 +3,9 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const events = require('./events');
+const fs = require('fs');
+const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
+let highScores = { easy: [], medium: [], hard: [] };
 
 const app = express();
 const server = http.createServer(app);
@@ -70,44 +72,48 @@ function saveHighScores() {
 loadHighScores();
 
 function updateHighScoresForFinishedRoom(room) {
-  const diffKey = room.difficulty || 'easy';
-  if (!highScores[diffKey]) {
-    highScores[diffKey] = [];
-  }
+  try {
+    const diffKey = room.difficulty || 'easy';
+    if (!highScores[diffKey]) {
+      highScores[diffKey] = [];
+    }
 
-  let updated = false;
-  room.players.forEach(p => {
-    if (!p.isBankrupt && p.money > 0) {
-      const trimmed = (p.name || '').trim();
-      const firstSpaceIdx = trimmed.indexOf(' ');
-      let avatar = '👾';
-      let name = trimmed;
-      if (firstSpaceIdx !== -1) {
-        avatar = trimmed.substring(0, firstSpaceIdx);
-        name = trimmed.substring(firstSpaceIdx + 1).trim();
-      }
+    let updated = false;
+    room.players.forEach(p => {
+      if (!p.isBankrupt && p.money > 0) {
+        const trimmed = (p.name || '').trim();
+        const firstSpaceIdx = trimmed.indexOf(' ');
+        let avatar = '👾';
+        let name = trimmed;
+        if (firstSpaceIdx !== -1) {
+          avatar = trimmed.substring(0, firstSpaceIdx);
+          name = trimmed.substring(firstSpaceIdx + 1).trim();
+        }
 
-      const existingIdx = highScores[diffKey].findIndex(h => h.name.toLowerCase() === name.toLowerCase());
-      if (existingIdx !== -1) {
-        if (p.money > highScores[diffKey][existingIdx].money) {
-          highScores[diffKey][existingIdx] = { avatar, name, money: p.money };
+        const existingIdx = highScores[diffKey].findIndex(h => h.name.toLowerCase() === name.toLowerCase());
+        if (existingIdx !== -1) {
+          if (p.money > highScores[diffKey][existingIdx].money) {
+            highScores[diffKey][existingIdx] = { avatar, name, money: p.money };
+            updated = true;
+          }
+        } else {
+          highScores[diffKey].push({ avatar, name, money: p.money });
           updated = true;
         }
-      } else {
-        highScores[diffKey].push({ avatar, name, money: p.money });
-        updated = true;
       }
+    });
+
+    highScores[diffKey].sort((a, b) => b.money - a.money);
+    highScores[diffKey] = highScores[diffKey].slice(0, 5);
+
+    if (updated) {
+      saveHighScores();
     }
-  });
 
-  highScores[diffKey].sort((a, b) => b.money - a.money);
-  highScores[diffKey] = highScores[diffKey].slice(0, 5);
-
-  if (updated) {
-    saveHighScores();
+    io.emit('highScoresUpdate', highScores);
+  } catch (err) {
+    console.error('Failed to update high scores:', err);
   }
-
-  io.emit('highScoresUpdate', highScores);
 }
 
 // ฟังก์ชันสร้าง Room Code แบบสุ่ม 4 ตัวอักษรภาษาอังกฤษพิมพ์ใหญ่
