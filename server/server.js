@@ -184,27 +184,22 @@ io.on('connection', (socket) => {
 
     const targetBaseName = getBaseName(playerName).toLowerCase();
 
-    // ตรวจสอบว่าผู้เล่นเคยเข้าร่วมห้องนี้แล้วหลุดไป (Reconnect)
+    // ตรวจสอบว่าผู้เล่นเคยเข้าร่วมห้องนี้แล้วหลุดไป หรือพยายามเชื่อมต่อใหม่จากอุปกรณ์เดิม (Reconnect)
     const existingPlayer = room.players.find(p => getBaseName(p.name).toLowerCase() === targetBaseName);
 
     if (existingPlayer) {
-      if (existingPlayer.isConnected) {
-        socket.emit('errorMsg', 'ชื่อผู้เล่นนี้กำลังเชื่อมต่อและเล่นอยู่ในห้องนี้');
-        return;
-      }
-
-      // ล้างไทม์เมอร์ตัดการเชื่อมต่อชั่วคราวออก
+      // ล้างไทม์เมอร์ตัดการเชื่อมต่อชั่วคราวออก (ถ้ามี)
       if (existingPlayer.disconnectTimer) {
         clearTimeout(existingPlayer.disconnectTimer);
         existingPlayer.disconnectTimer = null;
       }
 
-      // เปลี่ยนข้อมูล Socket ID และสถานะการเชื่อมต่อใหม่
+      // เปลี่ยนข้อมูล Socket ID และสถานะการเชื่อมต่อใหม่ทันทีแบบไร้รอยต่อ (Seamless Rebind)
       existingPlayer.id = socket.id;
       existingPlayer.isConnected = true;
       socket.join(code);
 
-      console.log(`Player ${existingPlayer.name} reconnected to room ${code}`);
+      console.log(`Player ${existingPlayer.name} reconnected/rebound socket to room ${code}`);
 
       // ส่งข้อความยืนยันเข้าร่วมห้องสำเร็จ
       socket.emit('roomJoined', { roomCode: code, player: existingPlayer });
