@@ -18,12 +18,23 @@ const io = new Server(server, {
 
 const PORT = process.env.PORT || 3000;
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // ให้บริการไฟล์ Static จากโฟลเดอร์ public
 app.use(express.static(path.join(__dirname, '../public')));
 
 // หน้าหลักบริการ index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// API Endpoint สำหรับดึงข้อมูล Hall of Fame ผ่าน HTTP GET (เป็น Fallback ให้กับระบบหน้าบ้าน)
+app.get('/api/highscores', (req, res) => {
+  res.json(highScores);
 });
 
 // เก็บข้อมูลสถานะของทุกห้องเกม

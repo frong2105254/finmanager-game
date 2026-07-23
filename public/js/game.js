@@ -421,29 +421,51 @@ function bindButtons() {
     setBodyScroll(true);
   });
 
+function fetchHighScores() {
+  if (typeof socket !== 'undefined' && socket) {
+    socket.emit('getHighScores');
+  }
+  fetch(`${BACKEND_URL}/api/highscores`)
+    .then(res => res.json())
+    .then(data => {
+      if (data) {
+        globalHighScores = data;
+        renderLeaderboardModal();
+      }
+    })
+    .catch(err => console.error('Error fetching highscores REST:', err));
+}
+
   // ปุ่มเปิดกระดานผู้นำสูงสุด (Leaderboard)
+  const handleOpenLeaderboard = () => {
+    window.audio.playClick();
+    fetchHighScores();
+    
+    // เลือกแท็บตามโหมดล่าสุดที่เล่น
+    if (myState.lastDifficulty) {
+      currentLeaderboardDiff = myState.lastDifficulty;
+    }
+    document.querySelectorAll('.leaderboard-tab-btn').forEach(btn => {
+      if (btn.getAttribute('data-diff') === currentLeaderboardDiff) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    document.getElementById('leaderboard-overlay').classList.add('show');
+    setBodyScroll(false);
+    renderLeaderboardModal();
+  };
+
   const btnOpenLeaderboard = document.getElementById('btn-open-leaderboard');
   if (btnOpenLeaderboard) {
-    btnOpenLeaderboard.addEventListener('click', () => {
-      window.audio.playClick();
-      socket.emit('getHighScores');
-      
-      // เลือกแท็บตามโหมดล่าสุดที่เล่น
-      if (myState.lastDifficulty) {
-        currentLeaderboardDiff = myState.lastDifficulty;
-      }
-      document.querySelectorAll('.leaderboard-tab-btn').forEach(btn => {
-        if (btn.getAttribute('data-diff') === currentLeaderboardDiff) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
+    btnOpenLeaderboard.addEventListener('click', handleOpenLeaderboard);
+  }
 
-      document.getElementById('leaderboard-overlay').classList.add('show');
-      setBodyScroll(false);
-      renderLeaderboardModal();
-    });
+  const btnOpenLeaderboardWinner = document.getElementById('btn-open-leaderboard-winner');
+  if (btnOpenLeaderboardWinner) {
+    btnOpenLeaderboardWinner.addEventListener('click', handleOpenLeaderboard);
   }
 
   // ปุ่มปิดกระดานผู้นำสูงสุด
@@ -1373,9 +1395,7 @@ function showWinnerCeremony(roomState) {
   currentRoomState = roomState;
   
   // ร้องขอข้อมูล Hall of Fame ล่าสุดจากเซิร์ฟเวอร์
-  if (typeof socket !== 'undefined' && socket) {
-    socket.emit('getHighScores');
-  }
+  fetchHighScores();
 
   // เล่นเสียงผู้ชนะ
   window.audio.playWin();
