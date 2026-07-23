@@ -30,21 +30,45 @@ app.get('/', (req, res) => {
 // โครงสร้าง: rooms[roomCode] = { id, players, difficulty, maxRounds, currentRound, status, eventsLog }
 const rooms = {};
 
-const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
-let highScores = { easy: [], medium: [], hard: [] };
+const DEFAULT_HIGHSCORES = {
+  easy: [
+    { avatar: "🐱", name: "นักลงทุนเซียนแปะ", money: 1850000 },
+    { avatar: "🤖", name: "AI_Investor", money: 1620000 },
+    { avatar: "👾", name: "CryptoKing", money: 1450000 },
+    { avatar: "👻", name: "สายเก็งกำไร", money: 1300000 },
+    { avatar: "🐷", name: "ออมเงินวันละนิด", money: 1150000 }
+  ],
+  medium: [
+    { avatar: "🦄", name: "บัฟเฟ็ตต์เรโทร", money: 2850000 },
+    { avatar: "🐸", name: "พญาเม่ารอดตาย", money: 2400000 },
+    { avatar: "🐱", name: "55", money: 2100000 },
+    { avatar: "🤖", name: "BotTrader", money: 1900000 },
+    { avatar: "🐼", name: "หมีกินหมู", money: 1650000 }
+  ],
+  hard: [
+    { avatar: "👑", name: "เทพการเงินมหาประลัย", money: 4500000 },
+    { avatar: "🦄", name: "UnicornRider", money: 3800000 },
+    { avatar: "👾", name: "HardModeMaster", money: 3200000 },
+    { avatar: "👻", name: "วิญญาณนักสู้", money: 2750000 },
+    { avatar: "🐸", name: "กบกู้โลก", money: 2300000 }
+  ]
+};
 
 function loadHighScores() {
   try {
     if (fs.existsSync(HIGHSCORES_FILE)) {
       const data = fs.readFileSync(HIGHSCORES_FILE, 'utf8');
       highScores = JSON.parse(data);
-      if (!highScores.easy) highScores.easy = [];
-      if (!highScores.medium) highScores.medium = [];
-      if (!highScores.hard) highScores.hard = [];
+      if (!highScores.easy || highScores.easy.length === 0) highScores.easy = DEFAULT_HIGHSCORES.easy;
+      if (!highScores.medium || highScores.medium.length === 0) highScores.medium = DEFAULT_HIGHSCORES.medium;
+      if (!highScores.hard || highScores.hard.length === 0) highScores.hard = DEFAULT_HIGHSCORES.hard;
+    } else {
+      highScores = JSON.parse(JSON.stringify(DEFAULT_HIGHSCORES));
+      saveHighScores();
     }
   } catch (err) {
     console.error('Failed to load highscores:', err);
-    highScores = { easy: [], medium: [], hard: [] };
+    highScores = JSON.parse(JSON.stringify(DEFAULT_HIGHSCORES));
   }
 }
 

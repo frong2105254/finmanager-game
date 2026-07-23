@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8-Bit FinManager - เกมบริหารเงินสุดปั่น</title>
   <!-- CSS สไตล์เรโทร -->
-  <link rel="stylesheet" href="css/retro.css?v=13">
+  <link rel="stylesheet" href="css/retro.css?v=14">
   <!-- นำเข้า Socket.IO Client จาก CDN เพื่อให้โฮสต์หน้าบ้านแบบเสรีข้ามโดเมนได้เสถียร -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
@@ -68,8 +68,8 @@
         </div>
       </div>
 
-      <button id="btn-create" class="pixel-btn pixel-btn-green" style="width: 100%; margin-bottom: 20px;">
-        สร้างห้องใหม่ (HOST)
+      <button id="btn-create" class="pixel-btn pixel-btn-green" style="width: 100%; margin-bottom: 20px; font-family: var(--font-thai); font-size: 0.9rem; padding: 10px 10px; line-height: 1.3;">
+        สร้างห้องใหม่ <span style="font-family: var(--font-retro); font-size: 0.6rem; display: block; margin-top: 2px; font-weight: normal; letter-spacing: 0.5px;">(HOST)</span>
       </button>
 
       <div style="font-family: var(--font-retro); font-size: 0.6rem; color: #8f85bd; margin-bottom: 20px;">
@@ -82,16 +82,16 @@
         <input type="text" id="room-code-input" class="pixel-input" placeholder="เช่น ABCD" maxlength="4" style="text-align: center; font-family: var(--font-retro); text-transform: uppercase;">
       </div>
 
-      <button id="btn-join" class="pixel-btn pixel-btn-cyan" style="width: 100%;">
-        เข้าร่วมห้อง (JOIN)
+      <button id="btn-join" class="pixel-btn pixel-btn-cyan" style="width: 100%; font-family: var(--font-thai); font-size: 0.9rem; padding: 10px 10px; line-height: 1.3;">
+        เข้าร่วมห้อง <span style="font-family: var(--font-retro); font-size: 0.6rem; display: block; margin-top: 2px; font-weight: normal; letter-spacing: 0.5px;">(JOIN)</span>
       </button>
 
-      <button id="btn-open-guide" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 15px;">
-        📖 คู่มือการลงทุน (GUIDE)
+      <button id="btn-open-guide" class="pixel-btn pixel-btn-yellow" style="width: 100%; margin-top: 15px; font-family: var(--font-thai); font-size: 0.9rem; padding: 10px 10px; line-height: 1.3;">
+        📖 คู่มือการลงทุน <span style="font-family: var(--font-retro); font-size: 0.6rem; display: block; margin-top: 2px; font-weight: normal; letter-spacing: 0.5px;">(GUIDE)</span>
       </button>
       
-      <button id="btn-open-leaderboard" class="pixel-btn pixel-btn-orange" style="width: 100%; margin-top: 15px;">
-        🏆 กระดานผู้นำ (LEADER BOARD)
+      <button id="btn-open-leaderboard" class="pixel-btn pixel-btn-orange" style="width: 100%; margin-top: 15px; font-family: var(--font-thai); font-size: 0.9rem; padding: 10px 10px; line-height: 1.3;">
+        🏆 กระดานผู้นำ <span style="font-family: var(--font-retro); font-size: 0.6rem; display: block; margin-top: 2px; font-weight: normal; letter-spacing: 0.5px;">(LEADER BOARD)</span>
       </button>
     </div>
 
@@ -640,6 +640,6 @@
 
   <!-- นำเข้าสคริปต์ Frontend -->
   <script src="js/audio.js"></script>
-  <script src="js/game.js?v=13"></script>
+  <script src="js/game.js?v=14"></script>
 </body>
 </html>
