@@ -471,23 +471,24 @@ function fetchHighScores() {
     btnOpenLeaderboardWinner.addEventListener('click', handleOpenLeaderboard);
   }
 
-  // ปุ่มปิดกระดานผู้นำสูงสุด
+  const closeLeaderboard = () => {
+    window.audio.playClick();
+    document.getElementById('leaderboard-overlay').classList.remove('show');
+    if (!document.getElementById('winner-overlay').classList.contains('show') &&
+        !document.getElementById('financial-report-overlay').classList.contains('show') &&
+        !document.getElementById('cutscene-overlay').classList.contains('show')) {
+      setBodyScroll(true);
+    }
+  };
+
   const btnCloseLeaderboard = document.getElementById('btn-close-leaderboard');
   if (btnCloseLeaderboard) {
-    btnCloseLeaderboard.addEventListener('click', () => {
-      window.audio.playClick();
-      document.getElementById('leaderboard-overlay').classList.remove('show');
-      setBodyScroll(true);
-    });
+    btnCloseLeaderboard.addEventListener('click', closeLeaderboard);
   }
 
   const btnCloseLeaderboardX = document.getElementById('btn-close-leaderboard-x');
   if (btnCloseLeaderboardX) {
-    btnCloseLeaderboardX.addEventListener('click', () => {
-      window.audio.playClick();
-      document.getElementById('leaderboard-overlay').classList.remove('show');
-      setBodyScroll(true);
-    });
+    btnCloseLeaderboardX.addEventListener('click', closeLeaderboard);
   }
 
   // แท็บเลือกหมวดความยากในหน้าต่างกระดานผู้นำ
