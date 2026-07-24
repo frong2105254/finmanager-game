@@ -1431,72 +1431,98 @@ function renderFinancialReport() {
 }
 
 // 10. พิธีฉลองชัยชนะ แสดงลีดเดอร์บอร์ดผู้ชนะท้ายเกม
+// 10. พิธีฉลองชัยชนะ แสดงลีดเดอร์บอร์ดผู้ชนะท้ายเกม
 function showWinnerCeremony(roomState) {
-  // บันทึกสถานะห้องปัจจุบัน
-  currentRoomState = roomState;
-  
-  // ร้องขอข้อมูล Hall of Fame ล่าสุดจากเซิร์ฟเวอร์
-  fetchHighScores();
+  try {
+    if (!roomState || !Array.isArray(roomState.players)) return;
+    currentRoomState = roomState;
+    
+    // ร้องขอข้อมูล Hall of Fame ล่าสุดจากเซิร์ฟเวอร์
+    try { fetchHighScores(); } catch(e) { console.error('fetchHighScores err:', e); }
 
-  // เล่นเสียงผู้ชนะ
-  window.audio.playWin();
+    // เล่นเสียงผู้ชนะ
+    try { if (window.audio && typeof window.audio.playWin === 'function') window.audio.playWin(); } catch(e) { console.error('playWin err:', e); }
 
-  // ปิดป๊อปอัพคัทซีนที่ค้างอยู่ (ถ้ามี)
-  document.getElementById('cutscene-overlay').classList.remove('show');
+    // ปิดป๊อปอัพคัทซีนที่ค้างอยู่ (ถ้ามี)
+    const cutsceneOverlay = document.getElementById('cutscene-overlay');
+    if (cutsceneOverlay) cutsceneOverlay.classList.remove('show');
 
-  // จัดอันดับผู้เล่นตามยอดเงินสุดท้าย (คนไม่ได้ล้มละลาย และเงินเยอะสุด)
-  const sortedPlayers = [...roomState.players].sort((a, b) => b.money - a.money);
-  const winner = sortedPlayers[0];
+    // จัดอันดับผู้เล่นตามยอดเงินสุดท้าย (คนไม่ได้ล้มละลาย และเงินเยอะสุด)
+    const sortedPlayers = [...roomState.players].sort((a, b) => (b.money || 0) - (a.money || 0));
+    const winner = sortedPlayers.length > 0 ? sortedPlayers[0] : null;
 
-  document.getElementById('winner-name-val').innerHTML = replaceAvatarInText(winner ? winner.name : 'ไม่มี');
-  document.getElementById('winner-wealth-val-label').innerText = winner ? `${winner.money.toLocaleString()} ฿` : '0 ฿';
+    const winnerNameEl = document.getElementById('winner-name-val');
+    if (winnerNameEl) {
+      winnerNameEl.innerHTML = replaceAvatarInText(winner && winner.name ? winner.name : 'ไม่มี');
+    }
 
-  // ตรวจสอบสถานะการท้าดวลเล่นใหม่
-  if (myState.isHost) {
-    document.getElementById('btn-play-again').style.display = 'block';
-    document.getElementById('guest-wait-restart').style.display = 'none';
-  } else {
-    document.getElementById('btn-play-again').style.display = 'none';
-    document.getElementById('guest-wait-restart').style.display = 'block';
+    const winnerWealthEl = document.getElementById('winner-wealth-val-label');
+    if (winnerWealthEl) {
+      const winnerMoney = winner && typeof winner.money === 'number' ? winner.money : 0;
+      winnerWealthEl.innerText = `${winnerMoney.toLocaleString()} ฿`;
+    }
+
+    // ตรวจสอบสถานะการท้าดวลเล่นใหม่
+    const btnPlayAgain = document.getElementById('btn-play-again');
+    const guestWaitRestart = document.getElementById('guest-wait-restart');
+    if (myState.isHost) {
+      if (btnPlayAgain) btnPlayAgain.style.display = 'block';
+      if (guestWaitRestart) guestWaitRestart.style.display = 'none';
+    } else {
+      if (btnPlayAgain) btnPlayAgain.style.display = 'none';
+      if (guestWaitRestart) guestWaitRestart.style.display = 'block';
+    }
+
+    // สร้างรายชื่อลีดเดอร์บอร์ดแบบครองอันดับร่วมกัน (Joint Rank)
+    const listEl = document.getElementById('leaderboard-list');
+    if (listEl) {
+      listEl.innerHTML = '';
+
+      let currentRank = 1;
+      sortedPlayers.forEach((p, idx) => {
+        const pMoney = typeof p.money === 'number' ? p.money : 0;
+        const prevPMoney = idx > 0 && typeof sortedPlayers[idx - 1].money === 'number' ? sortedPlayers[idx - 1].money : 0;
+
+        if (idx > 0 && pMoney < prevPMoney) {
+          currentRank = idx + 1;
+        }
+        
+        const row = document.createElement('div');
+        row.className = `leaderboard-row rank-${currentRank}`;
+        
+        const rankIcon = currentRank === 1 ? '🥇' : currentRank === 2 ? '🥈' : currentRank === 3 ? '🥉' : `${currentRank}.`;
+        
+        let statusLabel = '';
+        if (p.isBankrupt) {
+          statusLabel = '<span style="color:var(--neon-red)">(ล้มละลาย)</span>';
+        } else if (!p.isConnected) {
+          statusLabel = '<span style="color:#787299;">(ออกจากห้อง)</span>';
+        }
+
+        const safeName = p.name ? p.name : 'ผู้เล่น';
+        row.innerHTML = `
+          <span>${rankIcon} ${replaceAvatarInText(safeName)} ${statusLabel}</span>
+          <span style="font-weight:bold;">${pMoney.toLocaleString()} ฿</span>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+
+    // โชว์หน้านี้ขึ้นมาทับจอเกมทั้งหมด
+    const winnerOverlay = document.getElementById('winner-overlay');
+    if (winnerOverlay) {
+      winnerOverlay.classList.add('show');
+    }
+    setBodyScroll(false);
+    
+    // เรียกเอฟเฟกต์กระดาษสีฉลองชัยโปรยลงมา
+    try { startConfetti(); } catch(e) { console.error('startConfetti err:', e); }
+  } catch (err) {
+    console.error('Error in showWinnerCeremony:', err);
+    // บังคับแสดงหน้าผู้ชนะเสมอแม้องค์ประกอบบางส่วนจะขัดข้อง
+    const winnerOverlay = document.getElementById('winner-overlay');
+    if (winnerOverlay) winnerOverlay.classList.add('show');
   }
-
-  // สร้างรายชื่อลีดเดอร์บอร์ดแบบครองอันดับร่วมกัน (Joint Rank)
-  const listEl = document.getElementById('leaderboard-list');
-  listEl.innerHTML = '';
-
-  let currentRank = 1;
-  sortedPlayers.forEach((p, idx) => {
-    // หากมียอดเงินน้อยกว่าอันดับก่อนหน้า ให้อัปเดตอันดับตามความจริงของแถว (1-indexed)
-    if (idx > 0 && p.money < sortedPlayers[idx - 1].money) {
-      currentRank = idx + 1;
-    }
-    
-    const row = document.createElement('div');
-    row.className = `leaderboard-row rank-${currentRank}`;
-    
-    const rankIcon = currentRank === 1 ? '🥇' : currentRank === 2 ? '🥈' : currentRank === 3 ? '🥉' : `${currentRank}.`;
-    
-    // หากออกจากเกมตอนประกาศผล แพ้ชนะเท่าเดิม ไม่ให้ระบุเป็นล้มละลาย
-    let statusLabel = '';
-    if (p.isBankrupt) {
-      statusLabel = '<span style="color:var(--neon-red)">(ล้มละลาย)</span>';
-    } else if (!p.isConnected) {
-      statusLabel = '<span style="color:#787299;">(ออกจากห้อง)</span>';
-    }
-
-    row.innerHTML = `
-      <span>${rankIcon} ${replaceAvatarInText(p.name)} ${statusLabel}</span>
-      <span style="font-weight:bold;">${p.money.toLocaleString()} ฿</span>
-    `;
-    listEl.appendChild(row);
-  });
-
-  // โชว์หน้านี้ขึ้นมาทับจอเกมทั้งหมด
-  document.getElementById('winner-overlay').classList.add('show');
-  setBodyScroll(false);
-  
-  // เรียกเอฟเฟกต์กระดาษสีฉลองชัยโปรยลงมา
-  startConfetti();
 }
 
 // ระบบสร้างกระดาษสีร่วงหล่นเฉลองชัยชนะ (confetti)
